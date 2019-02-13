@@ -1,12 +1,27 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
+
 import './index.css';
-import App from './App';
+import BrambangLayout from './Mains/Layout';
+import Beranda from './Modules/Beranda/index';
+import Franchise from './Modules/Franchise/Screens/Index';
+
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const GetChildren = props => props.children;
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
+const BrambangApp = () => (
+    <BrowserRouter>
+        <GetChildren>
+            <BrambangLayout>
+                <Route exact path="/" component={Beranda} />
+                <Route exact path="/franchise" component={Franchise} />
+            </BrambangLayout>
+        </GetChildren>
+    </BrowserRouter>
+);
+
+render( <BrambangApp /> , document.getElementById('root'));
+
 serviceWorker.unregister();
