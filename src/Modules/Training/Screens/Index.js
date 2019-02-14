@@ -18,7 +18,6 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Typography from '@material-ui/core/Typography';
 import { Edit, DeleteForever } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
-import { SnackbarProvider } from 'notistack';
 import stylesBrambang from '../../../Assets/themes/stylesBrambang';
 import FormTraining from '../Components/FormTraining';
 function TabContainer(props) {
@@ -172,7 +171,6 @@ class DataTraining extends Component {
         };
 
         return (
-            <SnackbarProvider maxSnack={3}>
             <div>
                 <div className={classes.headerComponentWrapper}>
                     <Paper className={classes.headerComponentInner}r>
@@ -237,9 +235,9 @@ class DataTraining extends Component {
                         </DialogActions>
                         </Dialog>
                     </Paper>
-                < /div>
+                </div>
             </div>
-            </SnackbarProvider>
+
         );
   }
 }
