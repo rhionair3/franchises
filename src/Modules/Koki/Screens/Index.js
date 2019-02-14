@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MUIDatatable from 'mui-datatables';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import AppBar from '@material-ui/core/AppBar';
 import Paper from '@material-ui/core/Paper';
 import Switch from "@material-ui/core/Switch";
 import Button from '@material-ui/core/Button';
@@ -16,16 +15,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import { Edit, DeleteForever } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import stylesBrambang from '../../../Assets/themes/stylesBrambang';
-import ProfilFranchise from '../Components/ProfilFranchise';
-import DataGerobak from '../Components/DataGerobak';
-import DataKoki from '../Components/DataKoki';
-
+import FormKoki from '../Components/FormKoki';
 function TabContainer(props) {
   return (
     <div component="div" style={{ padding: 8 * 3 }}>
@@ -38,25 +32,17 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-class Franchise extends Component {
+class DataKoki extends Component {
     state = {
         open: false,
         openDel: false,
         value: 0
     };
 
-    modalFormOpen = (event, value) => {
-        console.log(value);
-        if (value) {
-            this.setState({
-                open: true,
-            });
-        } else {
-            this.setState({
-                open: true,
-                value: "profilContainer"
-            })
-        }
+    modalFormOpen = (value) => {
+        this.setState({
+            open: true,
+        });
     };
 
     modalFormClose = () => {
@@ -87,36 +73,41 @@ class Franchise extends Component {
 
     render() {
         const { classes } = this.props;
-        const { value } = this.state;
         const columns = [
             {
-                name: "Nama",
+                name: "Code Koki",
                 options: {
                     filter: true
                 }
             },
             {
-                name: "Perusahaan",
+                name: "Nama Koki",
                 options: {
                     filter: true
                 }
             }, 
             {
-                name: "Alamat",
+                name: "Pemilik Franchise",
                 options: {
                     filter: false
                 }
             },
             {
-                name: "No. Telp",
+                name: "No. Telp Pemilik",
+                options: {
+                    filter: false
+                }
+            }, 
+            {
+                name: "Kelulusan",
                 options: {
                     filter: false
                 }
             },
             {
-                name: "Status",
+                name: "Aktif",
                 options: {
-                    filter: true,
+                    filter: false,
                     customBodyRender: (value, tableMeta, updateValue) => {
                         let siTrue = (value === `true`);
                         return (
@@ -160,17 +151,17 @@ class Franchise extends Component {
         ];
 
         const data = [
-            ["Bajigur", "Test Corp", "Jaksel", "08123425365", `false`, 1],
-            ["Oncom", "Test Corp", "Jakut", "08123425366", `true`, 2],
-            ["Bob Marley", "Test Corp", "Jaktim", "08123425367", `false`, 3],
-            ["Moch. Ali", "Test Corp", "Bekasi", "0812342536", `true`, 4],
+            ["KO001", "Chef Juna", "Sung Ha Jung", "Training", "08123425365", `false`, 1],
+            ["KO002", "Marinka", "David Coppervile", "Menulang", "08123425366", `true`, 2],
+            ["KS002", "Aiko", "Situmorang", "Tidak Lulus", "08123425367", `false`, 3],
+            ["KS003", "Master Limbad", "Dolanan", "Lulus", "0812342536", `true`, 4],
         ];
 
         const options = {
             filterType: 'dropdown',
             customToolbar: () => {
                 return (
-                    <Tooltip title={"Registrasi Franchise Baru"}  style={{marginLeft:20}}>
+                    <Tooltip title={"Tambah Koki"} style={{marginLeft:20}}>
                         <Fab size="small" color="secondary" aria-label="Add" className={classes.btnInfo} onClick={this.modalFormOpen}>
                         <AddIcon />
                         </Fab>
@@ -184,14 +175,14 @@ class Franchise extends Component {
                 <div className={classes.headerComponentWrapper}>
                     <Paper className={classes.headerComponentInner}r>
                         <Typography variant="h6" gutterBottom>
-                            Informasi Pengiriman Gerobak
+                            Informasi Data Koki
                         </Typography>
                     </Paper>
                 </div>
                 <div className={classes.mainComponentWrapper}>
                     <Paper>
                         <MUIDatatable
-                            title={"List Data Franchise"} 
+                            title={"List Data Koki"} 
                             data={data} 
                             columns={columns} 
                             options={options} 
@@ -205,24 +196,11 @@ class Franchise extends Component {
                             maxWidth = 'lg'
                             scroll = 'body'
                         >
-                        <DialogTitle id="form-dialog-title">Rincian Data Franchise</DialogTitle>
+                        <DialogTitle id="form-dialog-title">Form Data Koki</DialogTitle>
                             <DialogContent className={classes.noPaddingDialogContent}>
-                                <AppBar position="static" color="default">
-                                    <Tabs
-                                        value={this.state.value}
-                                        onChange={this.handleChange}
-                                        indicatorColor="primary"
-                                        textColor="primary"
-                                        variant="fullWidth"
-                                    >
-                                        <Tab value="profilContainer" label="Profil Franchise" selected/>
-                                        <Tab value="dataGrobak" label="Data Gerobak" />
-                                        <Tab value="dataKoki" label="Data Koki" />
-                                    </Tabs>
-                                </AppBar>
-                                {value === "profilContainer" && <TabContainer className={classes.tabContainer}><ProfilFranchise/></TabContainer> }
-                                {value === "dataGrobak" && <TabContainer className={classes.tabContainer}><DataGerobak/></TabContainer> }
-                                {value === "dataKoki" && <TabContainer className={classes.tabContainer}><DataKoki/></TabContainer> }
+                                <div component="div" style={{ padding: 8 * 3 }}>
+                                    <FormKoki />
+                                </div>
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={this.modalFormClose} color="primary">
@@ -240,11 +218,11 @@ class Franchise extends Component {
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description"
                         >
-                        <DialogTitle id="alert-dialog-title">Konfirmasi Hapus Data Franchise</DialogTitle>
+                        <DialogTitle id="alert-dialog-title">Konfirmasi Hapus Data Koki</DialogTitle>
                         <DialogContent bacgroundColor="primary">
                             <DialogContentText id="alert-dialog-description">
-                                Data Franchise Akan Dihapus Dari List. Dan Tidak Akan tampil Diwaktu Berikutnya.
-                                Apakah Anda Yakin Ingin Menghapus Data Franchise ?
+                                Data Koki Akan Dihapus Dari List. Dan Tidak Akan tampil Diwaktu Berikutnya.
+                                Apakah Anda Yakin Ingin Menghapus Data Koki ?
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
@@ -264,9 +242,9 @@ class Franchise extends Component {
   }
 }
 
-Franchise.propTypes = {
+DataKoki.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(stylesBrambang, { withTheme: true })(Franchise);
+export default withStyles(stylesBrambang, { withTheme: true })(DataKoki);

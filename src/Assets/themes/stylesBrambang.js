@@ -95,10 +95,41 @@ const stylesBrambang = theme => ({
     },
     btnPrimary: {
         background: 'linear-gradient(45deg, #c0392b 30%, #e74c3c 90%)',
+        color: '#ffffff'
     },
     btnSuccess: {
         background: 'linear-gradient(45deg, #27ae60 30%, #2ecc71 90%)',
-    }
+        color: '#ffffff'
+    },
+    btnInfo: {
+        background: 'linear-gradient(45deg, #2980b9 30%, #3498db 90%)',
+        color: '#ffffff'
+    },
+    noPaddingDialogContent: {
+        padding: 0
+    },
+    tabContainer: {
+        padding:10,
+        overflow: 'hidden'
+    },
+    mainComponentWrapper: {
+        padding: 10
+    },
+    headerComponentWrapper: {
+        width: '100%;',
+        background: '#fbc81f',
+        margin:0,
+        paddingLeft:0,
+        paddingBottom: 4,
+    },
+    headerComponentInner: {
+        background: '#ffffff',
+        borderRadius: 0,
+        paddingLeft:10,
+        paddingRight: 10,
+        paddingBottom: 6,
+        paddingTop: 10
+    },
 });
 
 export default stylesBrambang;

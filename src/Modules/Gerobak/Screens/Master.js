@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MUIDatatable from 'mui-datatables';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import AppBar from '@material-ui/core/AppBar';
 import Paper from '@material-ui/core/Paper';
 import Switch from "@material-ui/core/Switch";
 import Button from '@material-ui/core/Button';
@@ -16,16 +15,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 import { Edit, DeleteForever } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import stylesBrambang from '../../../Assets/themes/stylesBrambang';
-import ProfilFranchise from '../Components/ProfilFranchise';
-import DataGerobak from '../Components/DataGerobak';
-import DataKoki from '../Components/DataKoki';
-
+import FormMasterGerobak from '../Components/FormMasterGerobak';
 function TabContainer(props) {
   return (
     <div component="div" style={{ padding: 8 * 3 }}>
@@ -38,14 +34,15 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-class Franchise extends Component {
+class MasterGerobak extends Component {
     state = {
         open: false,
         openDel: false,
+        notify: false,
         value: 0
     };
 
-    modalFormOpen = (event, value) => {
+    modalFormOpen = (value) => {
         console.log(value);
         if (value) {
             this.setState({
@@ -60,9 +57,31 @@ class Franchise extends Component {
     };
 
     modalFormClose = () => {
+        console.log('Harusnya Notif Tereksekusi');
+        this.setState({
+            open: false,
+        });
+        // this.showNotif({ vertical: 'top', horizontal: 'right' })
+    };
+
+    submitForm = () => {
         this.setState({
             open: false
         });
+    };
+
+    showNotif = state => () => {
+        console.log('Harusnya Notif Tereksekusi');
+        this.setState({
+            notify: true,
+            ...state
+        })
+    };
+
+    hideNotif = () => {
+        this.setState({
+            notify:false
+        })
     };
 
     handleChange = (event, value) => {
@@ -87,30 +106,17 @@ class Franchise extends Component {
 
     render() {
         const { classes } = this.props;
-        const { value } = this.state;
         const columns = [
             {
-                name: "Nama",
+                name: "Code Gerobak",
                 options: {
                     filter: true
                 }
             },
             {
-                name: "Perusahaan",
+                name: "Type Gerobak",
                 options: {
                     filter: true
-                }
-            }, 
-            {
-                name: "Alamat",
-                options: {
-                    filter: false
-                }
-            },
-            {
-                name: "No. Telp",
-                options: {
-                    filter: false
                 }
             },
             {
@@ -160,18 +166,18 @@ class Franchise extends Component {
         ];
 
         const data = [
-            ["Bajigur", "Test Corp", "Jaksel", "08123425365", `false`, 1],
-            ["Oncom", "Test Corp", "Jakut", "08123425366", `true`, 2],
-            ["Bob Marley", "Test Corp", "Jaktim", "08123425367", `false`, 3],
-            ["Moch. Ali", "Test Corp", "Bekasi", "0812342536", `true`, 4],
+            ["GD001", "Gerobak Dorong", "true",1],
+            ["GK001", "Gerobak Kuda", "false",2],
+            ["GM002", "Gerobak Motor", "false",3],
+            ["GB003", "Gerobak Mobil", "true",4],
         ];
 
         const options = {
             filterType: 'dropdown',
             customToolbar: () => {
                 return (
-                    <Tooltip title={"Registrasi Franchise Baru"}  style={{marginLeft:20}}>
-                        <Fab size="small" color="secondary" aria-label="Add" className={classes.btnInfo} onClick={this.modalFormOpen}>
+                    <Tooltip title={"Tambah Gerobak"} style={{marginLeft:20}}>
+                        <Fab size="small" color="secondary" aria-label="Add" className={classes.btnInfo} onClick={this.showNotif({ vertical: 'top', horizontal: 'right' })}>
                         <AddIcon />
                         </Fab>
                     </Tooltip>
@@ -184,14 +190,14 @@ class Franchise extends Component {
                 <div className={classes.headerComponentWrapper}>
                     <Paper className={classes.headerComponentInner}r>
                         <Typography variant="h6" gutterBottom>
-                            Informasi Pengiriman Gerobak
+                            Informasi Data Master Gerobak
                         </Typography>
                     </Paper>
                 </div>
                 <div className={classes.mainComponentWrapper}>
                     <Paper>
                         <MUIDatatable
-                            title={"List Data Franchise"} 
+                            title={"List Data Tipe Gerobak"} 
                             data={data} 
                             columns={columns} 
                             options={options} 
@@ -200,35 +206,23 @@ class Franchise extends Component {
                             open={this.state.open}
                             disableBackdropClick='true'
                             onClose={this.modalFormClose}
+                            onExited={this.showNotif({ vertical: 'top', horizontal: 'right' })}
                             aria-labelledby="form-dialog-title"
                             fullWidth='true'
                             maxWidth = 'lg'
                             scroll = 'body'
                         >
-                        <DialogTitle id="form-dialog-title">Rincian Data Franchise</DialogTitle>
+                        <DialogTitle id="form-dialog-title">Form Data Gerobak Franchise</DialogTitle>
                             <DialogContent className={classes.noPaddingDialogContent}>
-                                <AppBar position="static" color="default">
-                                    <Tabs
-                                        value={this.state.value}
-                                        onChange={this.handleChange}
-                                        indicatorColor="primary"
-                                        textColor="primary"
-                                        variant="fullWidth"
-                                    >
-                                        <Tab value="profilContainer" label="Profil Franchise" selected/>
-                                        <Tab value="dataGrobak" label="Data Gerobak" />
-                                        <Tab value="dataKoki" label="Data Koki" />
-                                    </Tabs>
-                                </AppBar>
-                                {value === "profilContainer" && <TabContainer className={classes.tabContainer}><ProfilFranchise/></TabContainer> }
-                                {value === "dataGrobak" && <TabContainer className={classes.tabContainer}><DataGerobak/></TabContainer> }
-                                {value === "dataKoki" && <TabContainer className={classes.tabContainer}><DataKoki/></TabContainer> }
+                                <div component="div" style={{ padding: 8 * 3 }}>
+                                    <FormMasterGerobak />
+                                </div>
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={this.modalFormClose} color="primary">
                                     Batal
                                 </Button>
-                                <Button onClick={this.modalFormClose} color="primary">
+                                <Button onClick={this.submitForm} color="primary">
                                     Simpan
                                 </Button>
                             </DialogActions>
@@ -240,11 +234,11 @@ class Franchise extends Component {
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description"
                         >
-                        <DialogTitle id="alert-dialog-title">Konfirmasi Hapus Data Franchise</DialogTitle>
+                        <DialogTitle id="alert-dialog-title">Konfirmasi Hapus Data Gerobak Franchise</DialogTitle>
                         <DialogContent bacgroundColor="primary">
                             <DialogContentText id="alert-dialog-description">
-                                Data Franchise Akan Dihapus Dari List. Dan Tidak Akan tampil Diwaktu Berikutnya.
-                                Apakah Anda Yakin Ingin Menghapus Data Franchise ?
+                                Data Gerobak Franchise Akan Dihapus Dari List. Dan Tidak Akan tampil Diwaktu Berikutnya.
+                                Apakah Anda Yakin Ingin Menghapus Data Gerobak Franchise ?
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
@@ -258,15 +252,29 @@ class Franchise extends Component {
                         </Dialog>
                     </Paper>
                 </div>
+                <Snackbar
+                    anchorOrigin={{ 
+                        vertical: 'top',
+                        horizontal: 'right',
+                     }}
+                    open={this.state.notify}
+                    onClose={this.hideNotif}
+                >
+                    <SnackbarContent
+                        className={classes.btnSuccess}
+                        aria-describedby="client-snackbar"
+                        message={<span id="message-id">I love snacks</span>}
+                    />
+                </Snackbar>
             </div>
 
         );
   }
 }
 
-Franchise.propTypes = {
+MasterGerobak.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(stylesBrambang, { withTheme: true })(Franchise);
+export default withStyles(stylesBrambang, { withTheme: true })(MasterGerobak);

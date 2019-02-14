@@ -77,7 +77,7 @@ class BrambangLayout extends Component {
                                 </ListItem>
                             </div>
                             <div className={classes.listItemWrapper}>
-                                <ListItem className={classes.listItemInner}>
+                                <ListItem className={classes.listItemInner} component="a" href="/gerobak">
                                         <ListItemIcon>
                                             <DashboardIcon />
                                         </ListItemIcon>
@@ -85,7 +85,7 @@ class BrambangLayout extends Component {
                                 </ListItem>
                             </div>
                             <div className={classes.listItemWrapper}>
-                                <ListItem className={classes.listItemInner}>
+                                <ListItem className={classes.listItemInner} component="a" href="/koki">
                                         <ListItemIcon>
                                             <DashboardIcon />
                                         </ListItemIcon>
@@ -93,7 +93,7 @@ class BrambangLayout extends Component {
                                 </ListItem>
                             </div>
                             <div className={classes.listItemWrapper}>
-                                <ListItem className={classes.listItemInner}>
+                                <ListItem className={classes.listItemInner} component="a" href="/training">
                                         <ListItemIcon>
                                             <DashboardIcon />
                                         </ListItemIcon>
@@ -101,7 +101,7 @@ class BrambangLayout extends Component {
                                 </ListItem>
                             </div>
                             <div className={classes.listItemWrapper}>
-                                <ListItem className={classes.listItemInner}>
+                                <ListItem className={classes.listItemInner} component="a" href="/training">
                                         <ListItemIcon>
                                             <DashboardIcon />
                                         </ListItemIcon>
@@ -115,11 +115,11 @@ class BrambangLayout extends Component {
                                 </ListItem>
                             </div>
                             <div className={classes.listItemWrapper}>
-                                <ListItem className={classes.listItemInner}>
+                                <ListItem className={classes.listItemInner} component="a" href="/master-gerobak">
                                         <ListItemIcon>
                                             <DashboardIcon />
                                         </ListItemIcon>
-                                        <ListItemText primary="Gerobak" color="inherit" />
+                                        <ListItemText primary="Master Gerobak" color="inherit" />
                                 </ListItem>
                             </div>
                             <div className={classes.listItemWrapper}>
