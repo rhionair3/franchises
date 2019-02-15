@@ -1,0 +1,30 @@
+{
+  "name": "franchiseapi",
+  "version": "1.0.0-ALPHA",
+  "description": "Rest API For Brambang Franchise",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "brambang",
+    "franchise",
+    "e-commerce",
+    "JWT",
+    "MySQL",
+    "Expressjs",
+    "Sequelized"
+  ],
+  "author": "Suryo Galih Kencana Harianja",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dateformat": "^3.0.3",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "mysql2": "^1.6.5",
+    "sequelize": "^4.42.0",
+    "sequelize-file": "^0.3.0"
+  }
+}
