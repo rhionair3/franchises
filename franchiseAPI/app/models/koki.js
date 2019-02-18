@@ -1,8 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
     const koki = sequelize.define('franchise_koki', {
-        id: {
-            type: Sequelize.INTEGER
-        },
         code: {
             type: Sequelize.STRING
         },

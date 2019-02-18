@@ -75,7 +75,7 @@ exports.editGerobakByFranchise = (req, res) => {
       code_no : req.body.code_no,
       franchise_id : req.body.franchise_id,
       gerobak_id : req.body.gerobak_id,
-      status : req.body.status
+      status : req.body.status,
       updatedAt : new Date(),
       updatedBy : ""
     },{
@@ -96,7 +96,7 @@ exports.editGerobakByFranchise = (req, res) => {
 }
 
 exports.setStatusGerobakFranchise = (req, res) => {
-    GerobakFranchise.update({
+    Gerobak.update({
       status : req.status
     },{
         where : {
@@ -117,12 +117,12 @@ exports.setStatusGerobakFranchise = (req, res) => {
 
 exports.createGerobak = (req, res) => {
     GerobakFranchise.create({
-        code : req.body.code
-        name : req.body.name
-        status : req.body.status
-        createdAt : new Date()
-        createdBy : ""
-        updatedAt : ""
+        code : req.body.code,
+        name : req.body.name,
+        status : req.body.status,
+        createdAt : new Date(),
+        createdBy : "",
+        updatedAt : "",
         updatedBy : ""
     }).then(gerobak => {
         res.status(200).json({

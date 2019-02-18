@@ -1,8 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
     const franchise = sequelize.define('users', {
-        id: {
-            type: Sequelize.INTEGER
-        },
         username: {
             type: Sequelize.STRING
         },

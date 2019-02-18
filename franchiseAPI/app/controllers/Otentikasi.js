@@ -8,7 +8,7 @@ var brambangCRYPT = require('bcryptjs');
 
 
 exports.registrasi = (req, res) => {
-
+    console.log(req);
     console.log('Proses Registrasi Pengguna Internal : ' + req.body.fullname);
 
     Pengguna.create({
@@ -17,8 +17,8 @@ exports.registrasi = (req, res) => {
         password            : brambangCRYPT.hashSync(req.body.password, 8),
         employee_role_id    : req.body.employee_role_id,
         isActive            : req.body.isActive,
-        createdAt           : req.body.createdAt,
-        updatedAt           : new Date(),
+        createdAt           : new Date(),
+        updatedAt           : "",
         is_reset_password   : req.body.is_reset_password
     }).then(pengguna => {
         res.send('Registrasi Pengguna Sukses !');
@@ -29,10 +29,10 @@ exports.registrasi = (req, res) => {
 
 exports.masuk = (req, res) => {
     console.log('Proses Login / Masuk Aplikasi');
-
+    console.log(res);
     Pengguna.findOne({
         where: {
-            employee_code: req.body.employee_code
+            employee_code: req.body.email
         }
     }).then(pengguna => {
         if(!pengguna) {

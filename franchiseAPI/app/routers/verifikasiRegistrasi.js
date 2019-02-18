@@ -1,30 +1,31 @@
 const brambangDB = require('../configs/db.js');
 const brambangKONF = require('../configs/config.js');
-const ATURANs = brambangKONF.ATURANs;
-const Pengguna = brambangDB.user;
+const ATURANs = brambangKONF.ATURANS;
+const Pengguna = brambangDB.pengguna;
 const Aturan = brambangDB.aturan;
 
 cekDuplikatNamaEmail = (req, res, next) => {
     Pengguna.findOne({
         where : {
-            namapengguna : req.body.namapengguna
+            employee_code : req.body.email
         }
     }).then( pengguna => {
         if (pengguna) {
-            res.status(400).send("Nama Pengguna Sudah Digunakan");
+            res.status(400).send("Email Pengguna Sudah Digunakan");
             return;
         }
-        Pengguna.findOne({
-            where : {
-                email : req.body.email
-            }
-        }).then(pengguna => {
-            if (pengguna) {
-                res.status(400).send("Email Sudah Digunakan");
-                return;
-            }
-            next();
-        })
+        next();
+        // Pengguna.findOne({
+        //     where : {
+        //         employee_code : req.body.email
+        //     }
+        // }).then(pengguna => {
+        //     if (pengguna) {
+        //         res.status(400).send("Email Sudah Digunakan");
+        //         return;
+        //     }
+        //     next();
+        // })
     })
 }
 

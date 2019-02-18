@@ -9,8 +9,8 @@ const brambangDB = require('./app/configs/db.js');
 
 const Aturan = brambangDB.aturan;
 
-brambangDB.sequelize.sync({ force: true }).then(() => {
-    console.log('sinkronisas data { force : true }');
+brambangDB.sequelize.sync({ force: false }).then(() => {
+    console.log('sinkronisasi data { force : true }');
     inisialisasi();
 })
 

@@ -1,8 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
     const gerobak = sequelize.define('franchise_gerobak', {
-        id: {
-            type: Sequelize.INTEGER
-        },
         code: {
             type: Sequelize.STRING
         },

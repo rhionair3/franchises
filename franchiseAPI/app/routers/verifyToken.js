@@ -7,7 +7,7 @@ const Pengguna = brambangDB.users;
 
 verifikasiToken = (req, res, next) => {
     console.log(req.headers['brambang-access-token']);
-    let token = req.header['brambang-access-token'];
+    let token = req.headers['brambang-access-token'];
 
     if(!token) {
         return res.status(403).send({

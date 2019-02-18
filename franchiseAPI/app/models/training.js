@@ -1,8 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
     const training = sequelize.define('franchise_training', {
-        id: {
-            type: Sequelize.INTEGER
-        },
         code: {
             type: Sequelize.STRING
         },

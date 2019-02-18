@@ -1,12 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
     const gerobakFranchise = sequelize.define('franchise_gerobakFranchise', {
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true
-        },
         code_no: {
           type: Sequelize.STRING
-        }
+        },
         franchise_id: {
             type: Sequelize.INTEGER
         },

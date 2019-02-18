@@ -1,8 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
     const franchiseDetail = sequelize.define('users_shipping_address', {
-        id: {
-            type: Sequelize.INTEGER
-        },
         user_id: {
             type: Sequelize.INTEGER
         },

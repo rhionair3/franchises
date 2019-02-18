@@ -6,7 +6,7 @@ module.exports = function(brambang) {
     const brambangPengguna = require("../controllers/Pengguna");
     const brambangFranchise = require("../controllers/franchise");
     const brambangGerobak = require("../controllers/gerobak");
-    const brambangKoki = require("..controllers/koki");
+    const brambangKoki = require("../controllers/koki");
 
 // Rest Api Otentikasi Pengguna
     brambang.post("/api/reg-pengguna", [verifikasiReg.cekDuplikatNamaEmail], brambangOtentikasi.registrasi);

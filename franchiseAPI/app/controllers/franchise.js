@@ -91,7 +91,7 @@ exports.createFranchise = (req, res) => {
         }).then(fdetail => {
             res.status(200).json({
                 "deskripsi": "Data Franchise Dan Detail Franchise Ditambahkan",
-                "franchise": franchise
+                "franchise": franchise,
                 "franchisedetail": fdetail
             });
         }).catch(err => {
