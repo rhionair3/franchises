@@ -85,7 +85,7 @@ exports.editGerobakByFranchise = (req, res) => {
     }).then(gerobak => {
         res.status(200).json({
             'deskripsi' : 'Sukses Memperbaharui Gerobak Franchise',
-            'gerobakfanchise' : gerobakfanchise
+            'gerobakfanchise': gerobak
         })
     }).catch(error => {
         res.status(500).json({
@@ -116,14 +116,15 @@ exports.setStatusGerobakFranchise = (req, res) => {
 }
 
 exports.createGerobak = (req, res) => {
-    GerobakFranchise.create({
+  console.log(req);
+    Gerobak.create({
         code : req.body.code,
         name : req.body.name,
         status : req.body.status,
         createdAt : new Date(),
-        createdBy : "",
+        createdBy : 0,
         updatedAt : "",
-        updatedBy : ""
+        updatedBy : 0
     }).then(gerobak => {
         res.status(200).json({
             'deskripsi' : 'Tambah Gerobak',
@@ -138,7 +139,7 @@ exports.createGerobak = (req, res) => {
 }
 
 exports.listGerobak = (req, res) => {
-    GerobakFranchise.findAll().then(gerobak => {
+    Gerobak.findAll().then(gerobak => {
         res.status(200).json({
             'deskripsi' : 'List Gerobak',
             'gerobak' : gerobak
@@ -152,9 +153,9 @@ exports.listGerobak = (req, res) => {
 }
 
 exports.detailGerobak = (req, res) => {
-    GerobakFranchise.findOne({
+    Gerobak.findOne({
         where : {
-          id : req.id
+          id : req.body.id
         }
     }).then(gerobak => {
         res.status(200).json({
@@ -170,7 +171,7 @@ exports.detailGerobak = (req, res) => {
 }
 
 exports.editGerobak = (req, res) => {
-    GerobakFranchise.update({
+    Gerobak.update({
         code : req.body.code,
         name : req.body.name,
         status : req.body.status,
@@ -183,7 +184,7 @@ exports.editGerobak = (req, res) => {
     }).then(gerobak => {
         res.status(200).json({
             'deskripsi' : 'Sukses Memperbaharui Gerobak',
-            'gerobakfanchise' : gerobakfanchise
+            'gerobakfanchise': gerobak
         })
     }).catch(error => {
         res.status(500).json({

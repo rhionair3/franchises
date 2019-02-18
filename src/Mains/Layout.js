@@ -17,6 +17,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import muiBrambang from '../Assets/themes/muiBrambang';
 import stylesBrambang from '../Assets/themes/stylesBrambang';
+import { getLogout } from '../Modules/Otentikasi/Services/Logout';
 
 
 class BrambangLayout extends Component {
@@ -146,10 +147,18 @@ class BrambangLayout extends Component {
                                         <ListItemText primary="Manajemen Menu" color="inherit" />
                                 </ListItem>
                             </div>
+                            <div className={classes.listItemWrapper}>
+                                <ListItem className={classes.listItemInner} onClick={getLogout}>
+                                        <ListItemIcon>
+                                            <DashboardIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Logout" color="inherit" />
+                                </ListItem>
+                            </div>
                         </List>
                     </Drawer>
                 </div>
-                <main className={classNames(classes.content, { [classes.contentShift]: open,})}>
+                <main className={classNames(classes.content, { [classes.contentShift]: open})}>
                     {children}
                 </main>
             </MuiThemeProvider>

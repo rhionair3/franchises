@@ -10,11 +10,16 @@ import Gerobak from './Modules/Gerobak/Screens/Index';
 import MasterGerobak from './Modules/Gerobak/Screens/Master';
 import DataKoki from './Modules/Koki/Screens/Index';
 import DataTraining from './Modules/Training/Screens/Index';
-
+import Login from "./Modules/Otentikasi/Screens/Index.js";
 import * as serviceWorker from './serviceWorker';
 
 const GetChildren = props => props.children;
-
+let isAuthenticated = sessionStorage.getItem("isAuthenticated");
+console.log(sessionStorage.getItem("currentToken"));
+if(!sessionStorage.getItem("currentToken") || sessionStorage.getItem("currentToken") === null) {
+  isAuthenticated = false;
+}
+if (isAuthenticated) {
 const BrambangApp = () => (
     <BrowserRouter>
         <GetChildren>
@@ -31,5 +36,15 @@ const BrambangApp = () => (
 );
 
 render( <BrambangApp /> , document.getElementById('root'));
+} else {
+  const BrambangApp = () => (
+      <BrowserRouter>
+          <Route exact path="/" component={Login} />
+      </BrowserRouter>
+  );
+
+  render( <BrambangApp /> , document.getElementById('root'));
+ }
+
 
 serviceWorker.unregister();

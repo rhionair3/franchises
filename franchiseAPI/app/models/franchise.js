@@ -13,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.DATE
         },
         password: {
-            type: Sequelize.INTEGER
+            type: Sequelize.STRING
         },
         resetPasswordToken: {
             type: Sequelize.STRING

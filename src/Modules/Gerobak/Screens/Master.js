@@ -22,6 +22,7 @@ import { Edit, DeleteForever } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import stylesBrambang from '../../../Assets/themes/stylesBrambang';
 import FormMasterGerobak from '../Components/FormMasterGerobak';
+
 function TabContainer(props) {
   return (
     <div component="div" style={{ padding: 8 * 3 }}>
@@ -34,26 +35,93 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+const getData = [];
 class MasterGerobak extends Component {
-    state = {
-        open: false,
-        openDel: false,
-        notify: false,
-        value: 0
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+            openDel: false,
+            notify: false,
+            value: null,
+            getReady : false,
+            formData : {}
+        };
     };
 
-    modalFormOpen = (value) => {
-        console.log(value);
-        if (value) {
-            this.setState({
-                open: true,
-            });
-        } else {
-            this.setState({
-                open: true,
-                value: "profilContainer"
-            })
+    componentDidMount() {
+      fetch('http://localhost:8081/api/master/gerobak', {
+        method: 'GET',
+        headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                "brambang-access-token" : sessionStorage.getItem("currentToken")
+
         }
+      }).then(response => {
+          return response.json();
+      }).then(result => {
+        let rows =[];
+        result.gerobak.map(item => {
+           rows = [
+            item.code,
+            item.name,
+            item.status,
+            item.id
+          ];
+
+          getData.push(rows);
+          this.setState({getReady: true});
+          return item;
+        });
+      });
+    }
+
+    modalFormOpen = (value) => {
+      console.log(value);
+        fetch('http://localhost:8081/api/master/detail-gerobak', {
+          method: 'POST',
+          body: JSON.stringify({
+              id : value
+
+          }),
+          headers: {
+                  "Content-type": "application/json; charset=UTF-8",
+                  "brambang-access-token" : sessionStorage.getItem("currentToken")
+
+          }
+        }).then(response => {
+            return response.json();
+        }).then(result => {
+          console.log(result);
+            let vdata = {};
+            if(result.gerobak != null) {
+                vdata = {
+                            id : result.gerobak.id,
+                            code : result.gerobak.code,
+                            name : result.gerobak.name,
+                            status : result.gerobak.status,
+                            createdAt : result.gerobak.createdAt,
+                            createdBy : result.gerobak.createdBy,
+                            updatedAt : result.gerobak.updatedAt,
+                            updatedBy : result.gerobak.updatedBy
+              };
+            } else {
+                vdata = {
+                            id : "",
+                            code : "",
+                            name : "",
+                            status : "",
+                            createdAt : "",
+                            createdBy : "",
+                            updatedAt : "",
+                            updatedBy : ""
+                          };
+            }
+            this.setState({
+                open: true,
+                formData : vdata
+            });
+        });
     };
 
     modalFormClose = () => {
@@ -91,7 +159,7 @@ class MasterGerobak extends Component {
     handleChangeIndex = index => {
         this.setState({ value: index });
     };
-    
+
     confirmDeleteOpen = () => {
         this.setState({
             openDel: true
@@ -151,7 +219,7 @@ class MasterGerobak extends Component {
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
                             <ToggleButtonGroup>
-                                <ToggleButton className={classes.btnSuccess} onClick={this.modalFormOpen}>
+                                <ToggleButton className={classes.btnSuccess} onClick={() => this.modalFormOpen(value)}>
                                 <Edit />
                                 </ToggleButton>
                                 <ToggleButton className={classes.btnPrimary} onClick={this.confirmDeleteOpen}>
@@ -165,26 +233,20 @@ class MasterGerobak extends Component {
             }
         ];
 
-        const data = [
-            ["GD001", "Gerobak Dorong", "true",1],
-            ["GK001", "Gerobak Kuda", "false",2],
-            ["GM002", "Gerobak Motor", "false",3],
-            ["GB003", "Gerobak Mobil", "true",4],
-        ];
+        const data = getData;
 
         const options = {
             filterType: 'dropdown',
             customToolbar: () => {
                 return (
                     <Tooltip title={"Tambah Gerobak"} style={{marginLeft:20}}>
-                        <Fab size="small" color="secondary" aria-label="Add" className={classes.btnInfo} onClick={this.showNotif({ vertical: 'top', horizontal: 'right' })}>
+                        <Fab size="small" color="secondary" aria-label="Add" className={classes.btnInfo} onClick={() => this.modalFormOpen()}>
                         <AddIcon />
                         </Fab>
                     </Tooltip>
                 );
             }
         };
-
         return (
             <div>
                 <div className={classes.headerComponentWrapper}>
@@ -196,26 +258,28 @@ class MasterGerobak extends Component {
                 </div>
                 <div className={classes.mainComponentWrapper}>
                     <Paper>
+                      {this.state.getReady ?
                         <MUIDatatable
-                            title={"List Data Tipe Gerobak"} 
-                            data={data} 
-                            columns={columns} 
-                            options={options} 
-                        />
+                            title={"List Data Tipe Gerobak"}
+                            data={data}
+                            columns={columns}
+                            options={options}
+                        /> : ""
+                      }
                         <Dialog
                             open={this.state.open}
-                            disableBackdropClick='true'
+                            disableBackdropClick={true}
                             onClose={this.modalFormClose}
                             onExited={this.showNotif({ vertical: 'top', horizontal: 'right' })}
                             aria-labelledby="form-dialog-title"
-                            fullWidth='true'
+                            fullWidth={true}
                             maxWidth = 'lg'
                             scroll = 'body'
                         >
                         <DialogTitle id="form-dialog-title">Form Data Gerobak Franchise</DialogTitle>
                             <DialogContent className={classes.noPaddingDialogContent}>
                                 <div component="div" style={{ padding: 8 * 3 }}>
-                                    <FormMasterGerobak />
+                                    <FormMasterGerobak vd = {this.state.formData} />
                                 </div>
                             </DialogContent>
                             <DialogActions>
@@ -229,7 +293,7 @@ class MasterGerobak extends Component {
                         </Dialog>
                         <Dialog
                             open={this.state.openDel}
-                            disableBackdropClick='true'
+                            disableBackdropClick={true}
                             onClose={this.confirmDeleteClose}
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description"
@@ -253,7 +317,7 @@ class MasterGerobak extends Component {
                     </Paper>
                 </div>
                 <Snackbar
-                    anchorOrigin={{ 
+                    anchorOrigin={{
                         vertical: 'top',
                         horizontal: 'right',
                      }}
