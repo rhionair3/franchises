@@ -29,8 +29,9 @@ class ProfilFranchise extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-        open: true,
-        id: "", name:"", lastName:"", names:"", address:"", mobileNo: "", status: "", propinsi: "", kota:"", kecamatan:""
+            open: true,
+            role_id: "",
+            fname : "",
         };
     }
     handleChange = () => event => {
@@ -41,18 +42,19 @@ class ProfilFranchise extends React.Component {
     }
 
     render() {
+        console.log(this.props.prov);
         const { classes } = this.props;
           return (
             <React.Fragment>
             <Grid container spacing={24}>
                 <Grid item xs={12}>
                     <TextField
-                        id="status"
-                        name="status"
+                        id="role_id"
+                        name="role_id"
                         select
                         label="Pilih Tipe Franchise"
-                        value={this.state.status}
-                        onChange={this.handleChange('status')}
+                        value={this.state.role_id}
+                        onChange={this.handleChange('role_id')}
                         fullWidth
                         SelectProps={{
                             MenuProps: {
@@ -65,19 +67,19 @@ class ProfilFranchise extends React.Component {
                         <MenuItem value="">
                         <em>Pilih</em>
                         </MenuItem>
-                        <MenuItem value={10}>Pribadi</MenuItem>
-                        <MenuItem value={20}>Perusahaan</MenuItem>
-                        <MenuItem value={30}>Internal</MenuItem>
+                        <MenuItem value={1}>Pribadi</MenuItem>
+                        <MenuItem value={2}>Perusahaan</MenuItem>
+                        <MenuItem value={3}>Internal</MenuItem>
                     </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                 <TextField
                     required
-                    id="name"
+                    id="fname"
                     label="Nama Depan"
-                    name="name"
-                    value={this.state.name}
-                    onChange={this.handleChange('name')}
+                    name="fname"
+                    value={this.state.fname}
+                    onChange={this.handleChange('fname')}
                     fullWidth
                     margin="dense"
                     variant="outlined"
@@ -86,11 +88,11 @@ class ProfilFranchise extends React.Component {
                 <Grid item xs={12} sm={6}>
                 <TextField
                     required
-                    id="lastName"
-                    name="lastName"
+                    id="lname"
+                    name="lname"
                     label="Nama Belakang"
-                    value={this.state.lastName}
-                    onChange={this.handleChange('lastName')}
+                    value={this.state.lname}
+                    onChange={this.handleChange('lname')}
                     fullWidth
                     margin = "dense"
                     variant = "outlined"
@@ -99,12 +101,12 @@ class ProfilFranchise extends React.Component {
                 <Grid item xs={12}>
                 <TextField
                     required
-                    id = "names"
-                    name = "names"
-                    label="Nama Penanggung Jawab Perusahaan"
+                    id = "fullname"
+                    name = "fullname"
+                    label="Nama Perusahaan"
                     fullWidth
-                    value={this.state.names}
-                    onChange={this.handleChange('names')}
+                    value={this.state.fullname}
+                    onChange={this.handleChange('fullname')}
                     margin = "dense"
                     variant = "outlined"
                 />
@@ -112,8 +114,8 @@ class ProfilFranchise extends React.Component {
                 <Grid item xs={12} sm={6}>
                 <TextField
                     required
-                    id="city"
-                    name="city"
+                    id="identity_no"
+                    name="identity_no"
                     label="No. KTP / Identitas Diri"
                     fullWidth
                     margin = "dense"
@@ -145,7 +147,7 @@ class ProfilFranchise extends React.Component {
                         variant = "outlined"
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         id="propinsi"
                         name="propinsi"
@@ -165,12 +167,10 @@ class ProfilFranchise extends React.Component {
                         <MenuItem value="">
                         <em>Pilih</em>
                         </MenuItem>
-                        <MenuItem value={10}>DKI Jakarta</MenuItem>
-                        <MenuItem value={20}>Jawa Barat</MenuItem>
-                        <MenuItem value={30}>Tangerang</MenuItem>
+                        {this.props.prov}
                     </TextField>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         id="kota"
                         name="kota"
@@ -197,7 +197,32 @@ class ProfilFranchise extends React.Component {
                         <MenuItem value={30}>Kepulauan Seribu</MenuItem>
                     </TextField>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        id="kecamatan"
+                        name="kecamatan"
+                        select
+                        label="Pilih Kecamatan"
+                        value={this.state.kecamatan}
+                        onChange={this.handleChange('kecamatan')}
+                        fullWidth
+                        SelectProps={{
+                            MenuProps: {
+                            className: classes.menu,
+                            },
+                        }}
+                        margin="dense"
+                        variant="outlined"
+                    >
+                        <MenuItem value="">
+                        <em>Pilih</em>
+                        </MenuItem>
+                        <MenuItem value={10}>Pasar Minggu</MenuItem>
+                        <MenuItem value={20}>Jagakarsa</MenuItem>
+                        <MenuItem value={30}>Tangerang Selatan</MenuItem>
+                    </TextField>
+                </Grid>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         id="kecamatan"
                         name="kecamatan"

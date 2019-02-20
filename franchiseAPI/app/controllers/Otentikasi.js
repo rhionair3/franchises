@@ -48,11 +48,18 @@ exports.masuk = (req, res) => {
             });
         }
 
+        let dataprofil = {
+            id : pengguna.id,
+            nama : pengguna.fullname,
+            email : pengguna.employee_code,
+            akseslevel : pengguna.employee_role_id
+        }
+
         var token = brambangJWT.sign({ id: pengguna.id }, brambangKONF.secret, {
 		  expiresIn: 86400 // expires in 24 hours
 		});
 		
-		res.status(200).send({ auth: true, aksesToken: token });
+		res.status(200).send({ auth: true, aksesToken: token, datapengguna: dataprofil });
     }).catch(err => {
         res.status(500).send('Error -> ' + err);
     });

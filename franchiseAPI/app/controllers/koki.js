@@ -33,11 +33,7 @@ exports.detailKoki = (req, res) => {
 }
 
 exports.listKoki = (req, res) => {
-    Koki.findAll({
-        where: {
-            franchise_id : req.id
-        }
-    }).then(koki => {
+    Koki.findAll().then(koki => {
 
     }).catch({
 

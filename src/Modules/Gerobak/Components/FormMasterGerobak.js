@@ -26,13 +26,14 @@ class FormMasterGerobak extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
+        id: this.props.vd.id,
         code: this.props.vd.code,
         name: this.props.vd.name,
         status: this.props.vd.status,
-        createdAt: this.props.vd.createdAt,
-        createdBy: this.props.vd.createdBy,
-        updatedAt: this.props.vd.updatedAt,
-        updatedBy: this.props.vd.updatedBy
+        createdAt: 0,
+        createdBy: "",
+        updatedAt: 0,
+        updatedBy: ""
       };
   }
 
@@ -40,28 +41,35 @@ class FormMasterGerobak extends React.Component {
       const state = this.state;
       state[event.target.name] = event.target.value;
       this.setState(state);
-  // console.log(event.target.name);
+      this.props.onChangeChild(state);
   }
 
     render() {
         const { classes } = this.props;
-        console.log(this.state.code);
         return (
             <React.Fragment>
               <Grid container spacing={24}>
                   <Grid item xs={12} md={12}>
                       <Grid container spacing={24}>
                           <Grid item xs={12} md={12}>
-                              <TextField
-                              required
-                              id="cdgerobak"
-                              name="code"
-                              label="Code Gerobak"
-                              fullWidth
-                              value={this.state.code}
-                              onChange={this.handleChange('code')}
-                              margin="dense"
-                              variant="outlined"/>
+                                <input
+                                    id="id"
+                                    name="id"
+                                    fullWidth
+                                    value={this.state.id}
+                                    type="hidden"
+                                />
+                                <TextField
+                                    required
+                                    id="cdgerobak"
+                                    name="code"
+                                    label="Code Gerobak"
+                                    fullWidth
+                                    value={this.state.code}
+                                    onChange={this.handleChange('code')}
+                                    margin="dense"
+                                    variant="outlined"
+                                />
                           </Grid>
                           <Grid item xs={12} md={12}>
                               <TextField

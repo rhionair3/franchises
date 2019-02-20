@@ -14,6 +14,7 @@ export const getLogin = (data) => {
   }).then(result => {
       sessionStorage.setItem('isAuthenticated', true);
       sessionStorage.setItem('currentToken', result.aksesToken);
+      sessionStorage.setItem('currentUser', result.datapengguna);
       window.location.reload();
   });
 }

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MUIDatatable from 'mui-datatables';
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AppBar from '@material-ui/core/AppBar';
 import Paper from '@material-ui/core/Paper';
-import Switch from "@material-ui/core/Switch";
 import Button from '@material-ui/core/Button';
 import Tooltip from "@material-ui/core/Tooltip";
 import Fab from '@material-ui/core/Fab';
@@ -18,6 +16,7 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { Edit, DeleteForever } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
@@ -25,6 +24,8 @@ import stylesBrambang from '../../../Assets/themes/stylesBrambang';
 import ProfilFranchise from '../Components/ProfilFranchise';
 import DataGerobak from '../Components/DataGerobak';
 import DataKoki from '../Components/DataKoki';
+import { getFranchiseList, getFranchiseDetail, getFranchiseDetailDetail, getFranchiseKokiDetail } from "../Services/Franchise";
+import { getProvince, getRegency, getDistrict, getPostal } from "../Services/Civilization";
 
 function TabContainer(props) {
   return (
@@ -38,25 +39,142 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+const dataFranchise = [];
 class Franchise extends Component {
-    state = {
-        open: false,
-        openDel: false,
-        value: 0
+    constructor(props) {
+        super(props);
+        this.state = {
+            open : false,
+            openDel : false,
+            notify : false,
+            value : 0,
+            getReady : false,
+            formData: "",
+            province_id : "",
+            regency_id : "",
+            district_id : "",
+            postal_id : ""
+        };
     };
 
-    modalFormOpen = (event, value) => {
-        console.log(value);
-        if (value) {
-            this.setState({
-                open: true,
+    componentDidMount() {
+        let datafranchise = getFranchiseList();
+        datafranchise.then(response => {
+            return response.json();
+        }).then(result => {
+            console.log(result);
+            let rows = [];
+            result.franchises.map(item => {
+                rows = [
+                        item.username,
+                        item.fullname,
+                        item.mobile,
+                        item.city,
+                        item.status,
+                        item.id
+                ];
+
+                dataFranchise.push(rows);
+                this.setState({
+                    getReady : true
+                });
+                return "Success";
+            });
+        });
+    }
+
+    getProvince = () => {
+        let getProvinceList = getProvince();
+        getProvinceList.then(resProv => {
+            return resProv.json();
+        }).then(resultProv => {
+            resultProv.province.map(item => {
+                return (
+                    <MenuItem value={item.id}>{item.name}</MenuItem>
+                );
+            })
+        })
+    }
+
+    onChangeProvince = (province_id) => {
+        let getReg = getRegency(province_id);
+        getReg.then(resReg => {
+            return resReg.json();
+        }).then(resultReg => {
+            resultReg.regency.map(item => {
+                return (
+                    <MenuItem value={item.id}>{item.name}</MenuItem>
+                );
+            })
+        })
+    }
+
+    onChangeRegency = (regency_id) => {
+        let getDist = getDistrict(regency_id);
+        getDist.then(resDist => {
+            return resDist.json();
+        }).then(resultDist => {
+            resultDist.district.map(item => {
+                return (
+                    <MenuItem value={item.id}>{item.name}</MenuItem>
+                );
+            })
+        })
+    }
+
+    onChangeDistrict = (district_id) => {
+        let getPost = getPostal(district_id);
+        getPost.then(resPost => {
+            return resPost.json();
+        }).then(resultPost => {
+            resultPost.postal.map(item => {
+                return (
+                    <MenuItem value={item.id}>{item.name}</MenuItem>
+                );
+            })
+        })
+    }
+
+    modalFormOpen = (value) => {
+        if(value !== 0) {
+            let detailFranchise = getFranchiseDetail(value);
+            detailFranchise.then(response => {
+                console.log(response);
+                return response.json();
+            }).then(result => {
+                console.log(result);
+                let formFranchiseData = result.franchise;
+                formFranchiseData.dataDetails = [];
+                formFranchiseData.dataKoki = [];
+                let listFranchiseDetail = getFranchiseDetailDetail(formFranchiseData.id);
+                let listFranchiseKoki = getFranchiseKokiDetail(formFranchiseData.id);
+                listFranchiseDetail.then(resDetail => {
+                    return resDetail.json();
+                }).then(resultDetail => {
+                    let formListDetails = resultDetail.franchiseDetails;
+                    formFranchiseData.dataDetails.push(formListDetails);
+                });
+                listFranchiseKoki.then(resKoki => {
+                    return resKoki.json();
+                }).then(resultKoki => {
+                    let formListKoki = resultKoki.kokis;
+                    formFranchiseData.dataKoki.push(formListKoki);
+                })
+                console.log(formFranchiseData);
+                this.setState({
+                    open: true,
+                    formData : formFranchiseData,
+                    value : "profilContainer"
+                });
             });
         } else {
             this.setState({
                 open: true,
-                value: "profilContainer"
-            })
+                formData : null,
+                value : "profilContainer"
+            });
         }
+        
     };
 
     modalFormClose = () => {
@@ -87,28 +205,28 @@ class Franchise extends Component {
 
     render() {
         const { classes } = this.props;
-        const { value } = this.state;
+        const { value, regency_id, district_id, province_id, postal_id } = this.state;
         const columns = [
             {
-                name: "Nama",
+                name: "Email",
                 options: {
                     filter: true
                 }
             },
             {
-                name: "Perusahaan",
+                name: "Nama Franchise",
                 options: {
                     filter: true
                 }
             }, 
             {
-                name: "Alamat",
+                name: "No. Telp",
                 options: {
                     filter: false
                 }
             },
             {
-                name: "No. Telp",
+                name: "Kota",
                 options: {
                     filter: false
                 }
@@ -118,22 +236,13 @@ class Franchise extends Component {
                 options: {
                     filter: true,
                     customBodyRender: (value, tableMeta, updateValue) => {
-                        let siTrue = (value === `true`);
+                        let dataStatus = (value === 1 ? "AKTIF" : "TIDAK AKTIF");
                         return (
-                            <FormControlLabel
-                                label={siTrue ? "ACTIVE" : "INACTIVE"}
-                                value={siTrue ? "Yes" : "No"}
-                                control={
-                                    <Switch
-                                        color="primary"
-                                        checked={siTrue}
-                                        value={siTrue ? "Yes" : "No"}
-                                    />
-                                }
-                                onChange={event => {
-                                updateValue(event.target.value === "Yes" ? false : true);
-                                }}
-                            />
+                            <div>
+                                <Button variant="outlined" size="small" color="primary" className={classes.margin}>
+                                    {dataStatus}
+                                </Button>
+                            </div>
                         );
                     }
                 }
@@ -145,10 +254,10 @@ class Franchise extends Component {
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
                             <ToggleButtonGroup>
-                                <ToggleButton className={classes.btnSuccess} onClick={this.modalFormOpen}>
+                                <ToggleButton className={classes.btnSuccess} onClick={() => this.modalFormOpen(value)}>
                                 <Edit />
                                 </ToggleButton>
-                                <ToggleButton className={classes.btnPrimary} onClick={this.confirmDeleteOpen}>
+                                <ToggleButton className={classes.btnPrimary} onClick={() => this.confirmDeleteOpen(value)}>
                                 <DeleteForever />
                                 </ToggleButton>
                             </ToggleButtonGroup>
@@ -159,19 +268,14 @@ class Franchise extends Component {
             }
         ];
 
-        const data = [
-            ["Bajigur", "Test Corp", "Jaksel", "08123425365", `false`, 1],
-            ["Oncom", "Test Corp", "Jakut", "08123425366", `true`, 2],
-            ["Bob Marley", "Test Corp", "Jaktim", "08123425367", `false`, 3],
-            ["Moch. Ali", "Test Corp", "Bekasi", "0812342536", `true`, 4],
-        ];
+        const data = dataFranchise;
 
         const options = {
             filterType: 'dropdown',
             customToolbar: () => {
                 return (
                     <Tooltip title={"Registrasi Franchise Baru"}  style={{marginLeft:20}}>
-                        <Fab size="small" color="secondary" aria-label="Add" className={classes.btnInfo} onClick={this.modalFormOpen}>
+                        <Fab size="small" color="secondary" aria-label="Add" className={classes.btnInfo} onClick={() => this.modalFormOpen(0)}>
                         <AddIcon />
                         </Fab>
                     </Tooltip>
@@ -192,7 +296,7 @@ class Franchise extends Component {
                     <Paper>
                         <MUIDatatable
                             title={"List Data Franchise"} 
-                            data={data} 
+                            data={this.state.getReady ? data : ""} 
                             columns={columns} 
                             options={options} 
                         />
@@ -219,10 +323,25 @@ class Franchise extends Component {
                                         <Tab value="dataGrobak" label="Data Gerobak" />
                                         <Tab value="dataKoki" label="Data Koki" />
                                     </Tabs>
-                                </AppBar>
-                                {value === "profilContainer" && <TabContainer className={classes.tabContainer}><ProfilFranchise/></TabContainer> }
-                                {value === "dataGrobak" && <TabContainer className={classes.tabContainer}><DataGerobak/></TabContainer> }
-                                {value === "dataKoki" && <TabContainer className={classes.tabContainer}><DataKoki/></TabContainer> }
+                                </AppBar> 
+                                {value === "profilContainer" && 
+                                    <TabContainer className={classes.tabContainer}>
+                                        <ProfilFranchise 
+                                            fData = {this.state.formData} 
+                                            prov={this.getProvince} 
+                                            onprov={() => this.onChangeProvince(province_id)} 
+                                            onreg={() => this.onChangeRegency(regency_id)} 
+                                            ondist={() => this.onChangeDistrict(district_id)}
+                                        />
+                                    </TabContainer> }
+                                {value === "dataGrobak" && 
+                                    <TabContainer className={classes.tabContainer}>
+                                        <DataGerobak fData = {this.state.formData} />
+                                    </TabContainer> }
+                                {value === "dataKoki" && 
+                                    <TabContainer className={classes.tabContainer}>
+                                    <DataKoki fData = {this.state.formData}/>
+                                </TabContainer> }
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={this.modalFormClose} color="primary">

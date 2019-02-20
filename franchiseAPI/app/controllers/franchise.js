@@ -2,16 +2,11 @@ const brambangDB = require('../configs/db');
 
 const Franchise = brambangDB.franchise;
 const FranchiseDetail = brambangDB.franchiseDetail;
+const FranchiseKoki = brambangDB.koki;
 
 exports.detailFranchise = (req, res) => {
     Franchise.findOne({
-        where : { id : req.id},
-        includes: [{
-            model: FranchiseDetail,
-            through: {
-                attributes: ['user_id', 'id']
-            }
-        }]
+        where : { id : req.body.id}
     }).then(franchise => {
         res.status(200).json({
             'deskripsi' : 'Detail Franchise',
@@ -25,15 +20,24 @@ exports.detailFranchise = (req, res) => {
     })
 }
 
+exports.detailFranchiseDetail = (req, res) => {
+    FranchiseDetail.findAll({
+        where : { user_id : req.body.franchise_id},
+    }).then(franchise => {
+        res.status(200).json({
+            'deskripsi' : 'Detail Franchise',
+            'franchiseDetails' : franchise
+        })
+    }).catch(err => {
+        res.status(500).json({
+            "deskripsi": "Tidak Dapat Menampilkan Detail Franchise",
+            "franchise": "Gagal Load Detail Franchise"
+        });
+    })
+}
+
 exports.listFranchise = (req, res) => {
-    Franchise.findAll({
-        includes: [{
-            model: FranchiseDetail,
-            through: {
-                attributes: ['user_id', 'id']
-            }
-        }]
-    }).then(franchises => {
+    Franchise.findAll().then(franchises => {
         res.status(200).json({
             'deskripsi' : 'List Franchise',
             'franchises' : franchises
@@ -42,6 +46,24 @@ exports.listFranchise = (req, res) => {
         res.status(500).json({
             "deskripsi": "Tidak Dapat Menampilkan List Pengguna",
             "franchises": "Gagal Load Data Franchise"
+        });
+    })
+}
+
+exports.listKokiFranchise = (req, res) => {
+    FranchiseKoki.findAll({
+        where: {
+            franchise_id : req.body.franchise_id
+        }
+    }).then(koki => {
+        res.status(200).json({
+            'deskripsi' : 'List Franchise',
+            'kokis' : koki
+        })
+    }).catch(err => {
+        res.status(500).json({
+            "deskripsi": "Tidak Dapat Menampilkan List Koki",
+            "kokis": "Gagal Load Data Koki"
         });
     })
 }

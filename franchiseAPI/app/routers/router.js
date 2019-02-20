@@ -7,10 +7,15 @@ module.exports = function(brambang) {
     const brambangFranchise = require("../controllers/franchise");
     const brambangGerobak = require("../controllers/gerobak");
     const brambangKoki = require("../controllers/koki");
+    const brambangCivilization = require("../controllers/civilization");
 
 // Rest Api Otentikasi Pengguna
     brambang.post("/api/reg-pengguna", [verifikasiReg.cekDuplikatNamaEmail], brambangOtentikasi.registrasi);
     brambang.post("/api/login-pengguna", brambangOtentikasi.masuk);
+    brambang.post("/api/provincy", brambangCivilization.provincy);
+    brambang.post("/api/regency", brambangCivilization.regency);
+    brambang.post("/api/district", brambangCivilization.district);
+    brambang.post("/api/postal", brambangCivilization.postal);
 //... End Rest Api Otentikasi Pengguna
 
 // Rest Api Master Gerobak
@@ -46,12 +51,12 @@ module.exports = function(brambang) {
 
 // Rest Api Franchise
     brambang.get("/api/franchise", [brambangJWT.verifikasiToken], brambangFranchise.listFranchise);
-    brambang.get("/api/detail-franchise", [brambangJWT.verifikasiToken], brambangFranchise.detailFranchise);
+    brambang.post("/api/detail-franchise", [brambangJWT.verifikasiToken], brambangFranchise.detailFranchise);
     brambang.post("/api/tambah-franchise", [brambangJWT.verifikasiToken], brambangFranchise.createFranchise);
     brambang.post("/api/edit-franchise", [brambangJWT.verifikasiToken], brambangFranchise.editFranchise);
-    brambang.post("/api/delete-franchise", [brambangJWT.verifikasiToken], brambangFranchise.editFranchise);
-    brambang.get("/api/detailfranchise", [brambangJWT.verifikasiToken], brambangFranchise.deleteFranchise);
-    brambang.get("/api/detail-detailfranchise", [brambangJWT.verifikasiToken], brambangFranchise.detailFranchise);
+    brambang.post("/api/delete-franchise", [brambangJWT.verifikasiToken], brambangFranchise.deleteFranchise);
+    brambang.post("/api/detail-detailfranchise", [brambangJWT.verifikasiToken], brambangFranchise.detailFranchiseDetail);
+    brambang.post("/api/koki-franchise", [brambangJWT.verifikasiToken], brambangFranchise.listKokiFranchise);
     brambang.post("/api/tambah-detailfranchise", [brambangJWT.verifikasiToken], brambangFranchise.createFranchiseDetail);
     brambang.post("/api/setDefault-detailfranchise", [brambangJWT.verifikasiToken], brambangFranchise.setDefaultDetails);
     brambang.post("/api/setDelete-detailfranchise", [brambangJWT.verifikasiToken], brambangFranchise.setDeleteDetails);

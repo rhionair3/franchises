@@ -122,9 +122,7 @@ exports.createGerobak = (req, res) => {
         name : req.body.name,
         status : req.body.status,
         createdAt : new Date(),
-        createdBy : 0,
-        updatedAt : "",
-        updatedBy : 0
+        createdBy : req.body.createdBy
     }).then(gerobak => {
         res.status(200).json({
             'deskripsi' : 'Tambah Gerobak',
@@ -176,7 +174,7 @@ exports.editGerobak = (req, res) => {
         name : req.body.name,
         status : req.body.status,
         updatedAt : new Date(),
-        updatedBy : ""
+        updatedBy : req.body.updatedBy
     },{
         where : {
           id : req.body.id
@@ -184,7 +182,7 @@ exports.editGerobak = (req, res) => {
     }).then(gerobak => {
         res.status(200).json({
             'deskripsi' : 'Sukses Memperbaharui Gerobak',
-            'gerobakfanchise': gerobak
+            'gerobak': gerobak
         })
     }).catch(error => {
         res.status(500).json({

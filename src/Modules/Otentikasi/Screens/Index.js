@@ -4,8 +4,6 @@ import classNames from 'classnames';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
@@ -125,7 +123,6 @@ class Login extends React.Component {
               margin = "dense"
               variant = "outlined"
               />
-              <FormControlLabel control={<Checkbox value="remember" color="secondary" />} label="Ingat Login Saya" />
               <Button type="submit" fullWidth variant="contained" color="secondary" className={classes.submit} >
               Sign in
               </Button>

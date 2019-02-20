@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MUIDatatable from 'mui-datatables';
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Paper from '@material-ui/core/Paper';
-import Switch from "@material-ui/core/Switch";
 import Button from '@material-ui/core/Button';
 import Tooltip from "@material-ui/core/Tooltip";
 import Fab from '@material-ui/core/Fab';
@@ -22,6 +20,7 @@ import { Edit, DeleteForever } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import stylesBrambang from '../../../Assets/themes/stylesBrambang';
 import FormMasterGerobak from '../Components/FormMasterGerobak';
+import { getMasterGerobak, getMasterGerobakDetail, simpanDataGerobak } from "../Services/Gerobak";
 
 function TabContainer(props) {
   return (
@@ -35,7 +34,7 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const getData = [];
+const getData = []
 class MasterGerobak extends Component {
     constructor(props) {
         super(props);
@@ -45,120 +44,154 @@ class MasterGerobak extends Component {
             notify: false,
             value: null,
             getReady : false,
-            formData : {}
+            formData : {},
+            message : "",
+            message_header : "",
+            message_status : "",
+            id: "",
+            code: "",
+            name: "",
+            status: "",
+            createdAt: 0,
+            createdBy: "",
+            updatedAt: 0,
+            updatedBy: "",
+            notify_stat: false
         };
     };
 
     componentDidMount() {
-      fetch('http://localhost:8081/api/master/gerobak', {
-        method: 'GET',
-        headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                "brambang-access-token" : sessionStorage.getItem("currentToken")
-
-        }
-      }).then(response => {
-          return response.json();
-      }).then(result => {
-        let rows =[];
-        result.gerobak.map(item => {
-           rows = [
-            item.code,
-            item.name,
-            item.status,
-            item.id
-          ];
-
-          getData.push(rows);
-          this.setState({getReady: true});
-          return item;
+        let getdata = getMasterGerobak();
+        getdata.then(response => {
+            return response.json();
+        }).then(result => {
+            let rows =[];
+            result.gerobak.map(item => {
+                rows = [
+                    item.code,
+                    item.name,
+                    item.status,
+                    item.id
+                ];
+                
+                getData.push(rows);
+                this.setState({
+                    getReady : true
+                });
+                return "Success";
+            });
         });
-      });
+        
     }
 
     modalFormOpen = (value) => {
-      console.log(value);
-        fetch('http://localhost:8081/api/master/detail-gerobak', {
-          method: 'POST',
-          body: JSON.stringify({
-              id : value
-
-          }),
-          headers: {
-                  "Content-type": "application/json; charset=UTF-8",
-                  "brambang-access-token" : sessionStorage.getItem("currentToken")
-
-          }
-        }).then(response => {
+        let datadetail = getMasterGerobakDetail(value);
+        datadetail.then(response => {
             return response.json();
         }).then(result => {
-          console.log(result);
+            console.log(result);
             let vdata = {};
             if(result.gerobak != null) {
                 vdata = {
-                            id : result.gerobak.id,
-                            code : result.gerobak.code,
-                            name : result.gerobak.name,
-                            status : result.gerobak.status,
-                            createdAt : result.gerobak.createdAt,
-                            createdBy : result.gerobak.createdBy,
-                            updatedAt : result.gerobak.updatedAt,
-                            updatedBy : result.gerobak.updatedBy
-              };
+                    id : result.gerobak.id,
+                    code : result.gerobak.code,
+                    name : result.gerobak.name,
+                    status : result.gerobak.status,
+                    createdAt : result.gerobak.createdAt,
+                    createdBy : result.gerobak.createdBy,
+                    updatedAt : result.gerobak.updatedAt,
+                    updatedBy : result.gerobak.updatedBy
+                };
             } else {
                 vdata = {
-                            id : "",
-                            code : "",
-                            name : "",
-                            status : "",
-                            createdAt : "",
-                            createdBy : "",
-                            updatedAt : "",
-                            updatedBy : ""
-                          };
+                    id : "",
+                    code : "",
+                    name : "",
+                    status : "",
+                    createdAt : "",
+                    createdBy : "",
+                    updatedAt : "",
+                    updatedBy : ""
+                };
             }
             this.setState({
                 open: true,
                 formData : vdata
             });
-        });
-    };
+            });
+        };
 
     modalFormClose = () => {
         console.log('Harusnya Notif Tereksekusi');
         this.setState({
             open: false,
         });
-        // this.showNotif({ vertical: 'top', horizontal: 'right' })
     };
 
     submitForm = () => {
-        this.setState({
-            open: false
+        console.log("load submit" + this.state.id);
+        let dataSimpan =  {
+            id : this.state.id,
+            code : this.state.code,
+            name : this.state.name,
+            status: this.state.status,
+        }
+        let simpanData = simpanDataGerobak(dataSimpan);
+        simpanData.then(response => {
+            return response.json();
+        }).then(result => {
+            let header_m = "";
+            let m = "";
+            let status_m = "";
+            if(result.gerobak) {
+                status_m = "success";
+                if(this.state.id && (this.state.id !== null || this.state.id !== "")) {
+                    header_m = "Pembaharuan Data Gerobak";
+                    m = "Sukses memperbaharui gerobak ... "
+                } else {
+                    header_m = "Menambah Data Gerobak";
+                    m = "Sukses menambahkan gerobak ..."
+                }
+            } else {
+                status_m = "failed";
+                header_m = "Error Dalam Menyimpan";
+                m = "Gagal menyimpan data ..."
+            }
+            this.setState({
+                open: false,
+                message_status: status_m,
+                message_header: header_m,
+                message : m,
+                notify_stat : true
+            });
         });
     };
 
     showNotif = state => () => {
         console.log('Harusnya Notif Tereksekusi');
-        this.setState({
-            notify: true,
-            ...state
-        })
+        if(this.state.notify_stat) {
+            this.setState({
+                notify: true,
+                ...state
+            })
+        } else {
+            this.setState({
+                notify:false
+            })
+        }
     };
 
     hideNotif = () => {
         this.setState({
             notify:false
         })
+        window.location.reload();
     };
 
-    handleChange = (event, value) => {
-        this.setState({ value });
-    };
-
-    handleChangeIndex = index => {
-        this.setState({ value: index });
-    };
+    handleChange = (value) => {
+        console.log(value)
+        this.setState(value);
+    }
 
     confirmDeleteOpen = () => {
         this.setState({
@@ -176,13 +209,13 @@ class MasterGerobak extends Component {
         const { classes } = this.props;
         const columns = [
             {
-                name: "Code Gerobak",
+                name: "Kode Gerobak",
                 options: {
                     filter: true
                 }
             },
             {
-                name: "Type Gerobak",
+                name: "Tipe Gerobak",
                 options: {
                     filter: true
                 }
@@ -190,24 +223,15 @@ class MasterGerobak extends Component {
             {
                 name: "Status",
                 options: {
-                    filter: true,
+                    filter: false,
                     customBodyRender: (value, tableMeta, updateValue) => {
-                        let siTrue = (value === `true`);
+                        let dataStatus = (value === 1 ? "Tersedia" : (value === 2 ? "Dalam Pesanan" : (value === 3 ? "Rusak" : "Dibatalkan")));
                         return (
-                            <FormControlLabel
-                                label={siTrue ? "ACTIVE" : "INACTIVE"}
-                                value={siTrue ? "Yes" : "No"}
-                                control={
-                                    <Switch
-                                        color="primary"
-                                        checked={siTrue}
-                                        value={siTrue ? "Yes" : "No"}
-                                    />
-                                }
-                                onChange={event => {
-                                updateValue(event.target.value === "Yes" ? false : true);
-                                }}
-                            />
+                            <div>
+                                <Button variant="outlined" size="small" color="primary" className={classes.margin}>
+                                    {dataStatus}
+                                </Button>
+                            </div>
                         );
                     }
                 }
@@ -222,7 +246,7 @@ class MasterGerobak extends Component {
                                 <ToggleButton className={classes.btnSuccess} onClick={() => this.modalFormOpen(value)}>
                                 <Edit />
                                 </ToggleButton>
-                                <ToggleButton className={classes.btnPrimary} onClick={this.confirmDeleteOpen}>
+                                <ToggleButton className={classes.btnPrimary} onClick={() => this.confirmDeleteOpen(value)}>
                                 <DeleteForever />
                                 </ToggleButton>
                             </ToggleButtonGroup>
@@ -247,6 +271,8 @@ class MasterGerobak extends Component {
                 );
             }
         };
+        
+        console.log(this.state.id);
         return (
             <div>
                 <div className={classes.headerComponentWrapper}>
@@ -258,38 +284,38 @@ class MasterGerobak extends Component {
                 </div>
                 <div className={classes.mainComponentWrapper}>
                     <Paper>
-                      {this.state.getReady ?
                         <MUIDatatable
                             title={"List Data Tipe Gerobak"}
-                            data={data}
+                            data={this.state.getReady ? data : ""}
                             columns={columns}
                             options={options}
-                        /> : ""
-                      }
+                        />
                         <Dialog
                             open={this.state.open}
                             disableBackdropClick={true}
                             onClose={this.modalFormClose}
-                            onExited={this.showNotif({ vertical: 'top', horizontal: 'right' })}
+                            onExited={this.showNotif()}
                             aria-labelledby="form-dialog-title"
                             fullWidth={true}
                             maxWidth = 'lg'
                             scroll = 'body'
                         >
-                        <DialogTitle id="form-dialog-title">Form Data Gerobak Franchise</DialogTitle>
-                            <DialogContent className={classes.noPaddingDialogContent}>
-                                <div component="div" style={{ padding: 8 * 3 }}>
-                                    <FormMasterGerobak vd = {this.state.formData} />
-                                </div>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={this.modalFormClose} color="primary">
-                                    Batal
-                                </Button>
-                                <Button onClick={this.submitForm} color="primary">
-                                    Simpan
-                                </Button>
-                            </DialogActions>
+                            <form className={classes.form} action="/" method="POST" onSubmit={(e) => { e.preventDefault(); this.submitForm();}}>
+                                <DialogTitle id="form-dialog-title">Form Data Gerobak Franchise</DialogTitle>
+                                <DialogContent className={classes.noPaddingDialogContent}>
+                                    <div component="div" style={{ padding: 8 * 3 }}>
+                                        <FormMasterGerobak vd = {this.state.formData} onChangeChild = {(value) => this.handleChange(value)} />
+                                    </div>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={this.modalFormClose} color="Secondary">
+                                        Batal
+                                    </Button>
+                                    <Button type="submit" color="primary" className={classes.btnInfo}>
+                                        Simpan
+                                    </Button>
+                                </DialogActions>
+                            </form>
                         </Dialog>
                         <Dialog
                             open={this.state.openDel}
@@ -322,12 +348,18 @@ class MasterGerobak extends Component {
                         horizontal: 'right',
                      }}
                     open={this.state.notify}
+                    autoHideDuration={1500}
                     onClose={this.hideNotif}
                 >
                     <SnackbarContent
-                        className={classes.btnSuccess}
+                        className={ this.state.message_status && this.state.message_status === "success" ? classes.btnSuccess : classes.btnDanger }
                         aria-describedby="client-snackbar"
-                        message={<span id="message-id">I love snacks</span>}
+                        message={
+                                    <div>
+                                        <h6>{ this.state.message_header }</h6>
+                                        <span id="message-id">{this.state.message}</span>
+                                    </div>
+                                }
                     />
                 </Snackbar>
             </div>
