@@ -1,5 +1,5 @@
 export const getMasterGerobak = () => {
-    return fetch('http://localhost:8081/api/master/gerobak', {
+    return fetch('http://192.168.1.52:8081/api/master/gerobak', {
         method: 'GET',
         headers: {
                 "Content-type": "application/json; charset=UTF-8",
@@ -10,7 +10,7 @@ export const getMasterGerobak = () => {
 };
 
 export const getMasterGerobakDetail = (value) => {
-    return fetch('http://localhost:8081/api/master/detail-gerobak', {
+    return fetch('http://192.168.1.52:8081/api/master/detail-gerobak', {
         method: 'POST',
         body: JSON.stringify({
             id : value
@@ -25,7 +25,7 @@ export const getMasterGerobakDetail = (value) => {
 
 export const simpanDataGerobak = (dataSimpan) => {
     if(dataSimpan.id && (dataSimpan.id !== null || dataSimpan.id !== "")) {
-        return fetch("http://localhost:8081/api/master/edit-gerobak", {
+        return fetch("http://192.168.1.52:8081/api/master/edit-gerobak", {
             method: 'POST',
             body: JSON.stringify({
                 id : dataSimpan.id,
@@ -41,7 +41,7 @@ export const simpanDataGerobak = (dataSimpan) => {
             }
         });
     } else {
-        return fetch("http://localhost:8081/api/master/tambah-gerobak", {
+        return fetch("http://192.168.1.52:8081/api/master/tambah-gerobak", {
             method: 'POST',
             body: JSON.stringify({
                 id : dataSimpan.id,

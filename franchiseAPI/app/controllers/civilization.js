@@ -8,7 +8,7 @@ const Postal = brambangDB.postal;
 exports.provincy = (req, res) => {
     Provincy.findAll({
         where: {
-            orders : { $not : req.body.orders }
+            orders : [1,2,3,4]
         }
     }).then(provincy => {
         res.status(200).json({

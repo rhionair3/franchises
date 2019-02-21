@@ -42,10 +42,10 @@ module.exports = (sequelize, Sequelize) => {
         bank_name: {
             type: Sequelize.STRING
         },
-        bank_acount_no: {
+        bank_account_no: {
             type: Sequelize.STRING
         },
-        bank_acount_name: {
+        bank_account_name: {
             type: Sequelize.STRING
         },
         createdAt: {
@@ -63,7 +63,7 @@ module.exports = (sequelize, Sequelize) => {
         sales_id: {
             type: Sequelize.INTEGER
         },
-        role_id: {
+        roles_id: {
             type: Sequelize.INTEGER
         },
         device_id: {

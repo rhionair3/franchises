@@ -73,7 +73,7 @@ class MasterGerobak extends Component {
                     item.status,
                     item.id
                 ];
-                
+
                 getData.push(rows);
                 this.setState({
                     getReady : true
@@ -81,7 +81,7 @@ class MasterGerobak extends Component {
                 return "Success";
             });
         });
-        
+
     }
 
     modalFormOpen = (value) => {
@@ -211,7 +211,7 @@ class MasterGerobak extends Component {
             {
                 name: "Kode Gerobak",
                 options: {
-                    filter: true
+                    filter: false
                 }
             },
             {
@@ -223,7 +223,7 @@ class MasterGerobak extends Component {
             {
                 name: "Status",
                 options: {
-                    filter: false,
+                    filter: true,
                     customBodyRender: (value, tableMeta, updateValue) => {
                         let dataStatus = (value === 1 ? "Tersedia" : (value === 2 ? "Dalam Pesanan" : (value === 3 ? "Rusak" : "Dibatalkan")));
                         return (
@@ -271,7 +271,7 @@ class MasterGerobak extends Component {
                 );
             }
         };
-        
+
         console.log(this.state.id);
         return (
             <div>

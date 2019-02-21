@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
+import { getProvince, getRegency, getDistrict, getPostal } from "../Services/Civilization";
 
 const styles = theme => ({
     root: {
@@ -24,7 +25,10 @@ const styles = theme => ({
     }
 });
 
-
+const provList = [];
+const regList = [];
+const distList = [];
+const postList = [];
 class ProfilFranchise extends React.Component {
     constructor(props) {
         super(props);
@@ -32,8 +36,37 @@ class ProfilFranchise extends React.Component {
             open: true,
             role_id: "",
             fname : "",
+            regList : {},
+            getReady : false,
+            province_id : "",
+            regency_id : "",
+            district_id : "",
+            postal_id : ""
         };
+    };
+
+    componentDidMount() {
+      let getProvinceList = getProvince();
+      getProvinceList.then(resProv => {
+          return resProv.json();
+      }).then(resultProv => {
+        console.log(resultProv);
+          let rows = {};
+          resultProv.provincy.map(item => {
+            rows = {
+                    id : item.id,
+                    name : item.name
+                  }
+            provList.push(rows);
+            this.setState({
+                getReady : true
+            });
+            return "Success";
+          })
+          console.log(provList);
+      })
     }
+
     handleChange = () => event => {
         const state = this.state;
         state[event.target.name] = event.target.value;
@@ -41,8 +74,76 @@ class ProfilFranchise extends React.Component {
     // console.log(event.target.name);
     }
 
+    onChangeProvince = () => event => {
+        let getReg = getRegency(event.target.value);
+        getReg.then(resReg => {
+            return resReg.json();
+        }).then(resultReg => {
+          let rows = {};
+          resultReg.regency.map(item => {
+            rows = {
+                    id : item.id,
+                    name : item.name
+                  }
+            regList.push(rows);
+            const state = this.state;
+            state[event.target.name] = event.target.value;
+            this.setState(state);
+            this.setState({
+                getReady : true
+            });
+            return "regList";
+          })
+        })
+    }
+
+    onChangeRegency = () => event => {
+        let getDist = getDistrict(event.target.value);
+        getDist.then(resDist => {
+            return resDist.json();
+        }).then(resultDist => {
+            let rows = {};
+            resultDist.district.map(item => {
+                rows = {
+                        id : item.id,
+                        name : item.name
+                      }
+                distList.push(rows);
+                const state = this.state;
+                state[event.target.name] = event.target.value;
+                this.setState(state);
+                this.setState({
+                    getReady : true
+                });
+                return "distList";
+            })
+        })
+    }
+
+    onChangeDistrict = () => event => {
+        let getPost = getPostal(event.target.value);
+        getPost.then(resPost => {
+            return resPost.json();
+        }).then(resultPost => {
+            let rows = {};
+            resultPost.postal.map(item => {
+                rows = {
+                        id : item.id,
+                        postal_code : item.postal_code
+                      }
+                postList.push(rows);
+                const state = this.state;
+                state[event.target.name] = event.target.value;
+                this.setState(state);
+                this.setState({
+                    getReady : true
+                });
+                return "postList";
+            })
+        })
+    }
+
     render() {
-        console.log(this.props.prov);
         const { classes } = this.props;
           return (
             <React.Fragment>
@@ -140,7 +241,7 @@ class ProfilFranchise extends React.Component {
                         label="Alamat Perusahaan"
                         value={this.state.address}
                         onChange={this.handleChange('address')}
-                        multiline 
+                        multiline
                         rows = "4"
                         fullWidth
                         margin = "dense"
@@ -149,12 +250,12 @@ class ProfilFranchise extends React.Component {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        id="propinsi"
-                        name="propinsi"
+                        id="province_id"
+                        name="province_id"
                         select
                         label="Pilih Propinsi"
-                        value={this.state.propinsi}
-                        onChange={this.handleChange('propinsi')}
+                        value={this.state.province_id}
+                        onChange={this.onChangeProvince('province_id')}
                         fullWidth
                         SelectProps={{
                             MenuProps: {
@@ -167,17 +268,22 @@ class ProfilFranchise extends React.Component {
                         <MenuItem value="">
                         <em>Pilih</em>
                         </MenuItem>
-                        {this.props.prov}
+                        {this.state.getReady && provList.map((item, i) =>{
+                          console.log(item);
+                          return [
+                            <MenuItem value={item.id}>{item.name}</MenuItem>
+                          ]
+                        })}
                     </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        id="kota"
-                        name="kota"
+                        id="regency_id"
+                        name="regency_id"
                         select
                         label="Pilih Kota / kabupaten"
-                        value={this.state.kota}
-                        onChange={this.handleChange('kota')}
+                        value={this.state.regency_id}
+                        onChange={this.onChangeRegency('regency_id')}
                         fullWidth
                         SelectProps={{
                             MenuProps: {
@@ -190,21 +296,22 @@ class ProfilFranchise extends React.Component {
                         <MenuItem value="">
                         <em>Pilih</em>
                         </MenuItem>
-                        <MenuItem value={10}>Jakarta Selatan</MenuItem>
-                        <MenuItem value={20}>Jakarta Utara</MenuItem>
-                        <MenuItem value={30}>Jakarta Barat</MenuItem>
-                        <MenuItem value={20}>Jakarta Timur</MenuItem>
-                        <MenuItem value={30}>Kepulauan Seribu</MenuItem>
+                        {this.state.getReady && regList.map((item, i) =>{
+                          console.log(item);
+                          return [
+                            <MenuItem value={item.id}>{item.name}</MenuItem>
+                          ]
+                        })}
                     </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        id="kecamatan"
-                        name="kecamatan"
+                        id="district_id"
+                        name="district_id"
                         select
                         label="Pilih Kecamatan"
-                        value={this.state.kecamatan}
-                        onChange={this.handleChange('kecamatan')}
+                        value={this.state.district_id}
+                        onChange={this.onChangeDistrict('district_id')}
                         fullWidth
                         SelectProps={{
                             MenuProps: {
@@ -217,19 +324,23 @@ class ProfilFranchise extends React.Component {
                         <MenuItem value="">
                         <em>Pilih</em>
                         </MenuItem>
-                        <MenuItem value={10}>Pasar Minggu</MenuItem>
-                        <MenuItem value={20}>Jagakarsa</MenuItem>
-                        <MenuItem value={30}>Tangerang Selatan</MenuItem>
+
+                        {this.state.getReady && distList.map((item, i) =>{
+                          console.log(item);
+                          return [
+                            <MenuItem value={item.id}>{item.name}</MenuItem>
+                          ]
+                        })}
                     </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        id="kecamatan"
-                        name="kecamatan"
+                        id="postal_id"
+                        name="postal_id"
                         select
-                        label="Pilih Kecamatan"
-                        value={this.state.kecamatan}
-                        onChange={this.handleChange('kecamatan')}
+                        label="Pilih Kode Pos"
+                        value={this.state.postal_id}
+                        onChange={this.handleChange('postal_id')}
                         fullWidth
                         SelectProps={{
                             MenuProps: {
@@ -242,9 +353,12 @@ class ProfilFranchise extends React.Component {
                         <MenuItem value="">
                         <em>Pilih</em>
                         </MenuItem>
-                        <MenuItem value={10}>Pasar Minggu</MenuItem>
-                        <MenuItem value={20}>Jagakarsa</MenuItem>
-                        <MenuItem value={30}>Tangerang Selatan</MenuItem>
+                        {this.state.getReady && postList.map((item, i) =>{
+                          console.log(item);
+                          return [
+                            <MenuItem value={item.id}>{item.postal_code}</MenuItem>
+                          ]
+                        })}
                     </TextField>
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -287,7 +401,7 @@ class ProfilFranchise extends React.Component {
                     <Typography component="p"> Pribadi : Lampirkan Fotocopy KTP dan NPWP ( Jika Memiliki NPWP ) </Typography>
                     <Typography component="p"> Perusahaan : Lampirkan Fotocopy TDP, SIUP dan NPWP Perusahaan Dan KTP Penangung Jawab </Typography>
                 </Paper>
-                </div>
+            </div>
             </React.Fragment>
         );
     }

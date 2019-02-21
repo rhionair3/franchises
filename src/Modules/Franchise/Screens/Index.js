@@ -16,7 +16,6 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { Edit, DeleteForever } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
@@ -25,7 +24,6 @@ import ProfilFranchise from '../Components/ProfilFranchise';
 import DataGerobak from '../Components/DataGerobak';
 import DataKoki from '../Components/DataKoki';
 import { getFranchiseList, getFranchiseDetail, getFranchiseDetailDetail, getFranchiseKokiDetail } from "../Services/Franchise";
-import { getProvince, getRegency, getDistrict, getPostal } from "../Services/Civilization";
 
 function TabContainer(props) {
   return (
@@ -49,11 +47,7 @@ class Franchise extends Component {
             notify : false,
             value : 0,
             getReady : false,
-            formData: "",
-            province_id : "",
-            regency_id : "",
-            district_id : "",
-            postal_id : ""
+            formData: ""
         };
     };
 
@@ -81,58 +75,6 @@ class Franchise extends Component {
                 return "Success";
             });
         });
-    }
-
-    getProvince = () => {
-        let getProvinceList = getProvince();
-        getProvinceList.then(resProv => {
-            return resProv.json();
-        }).then(resultProv => {
-            resultProv.province.map(item => {
-                return (
-                    <MenuItem value={item.id}>{item.name}</MenuItem>
-                );
-            })
-        })
-    }
-
-    onChangeProvince = (province_id) => {
-        let getReg = getRegency(province_id);
-        getReg.then(resReg => {
-            return resReg.json();
-        }).then(resultReg => {
-            resultReg.regency.map(item => {
-                return (
-                    <MenuItem value={item.id}>{item.name}</MenuItem>
-                );
-            })
-        })
-    }
-
-    onChangeRegency = (regency_id) => {
-        let getDist = getDistrict(regency_id);
-        getDist.then(resDist => {
-            return resDist.json();
-        }).then(resultDist => {
-            resultDist.district.map(item => {
-                return (
-                    <MenuItem value={item.id}>{item.name}</MenuItem>
-                );
-            })
-        })
-    }
-
-    onChangeDistrict = (district_id) => {
-        let getPost = getPostal(district_id);
-        getPost.then(resPost => {
-            return resPost.json();
-        }).then(resultPost => {
-            resultPost.postal.map(item => {
-                return (
-                    <MenuItem value={item.id}>{item.name}</MenuItem>
-                );
-            })
-        })
     }
 
     modalFormOpen = (value) => {
@@ -174,7 +116,7 @@ class Franchise extends Component {
                 value : "profilContainer"
             });
         }
-        
+
     };
 
     modalFormClose = () => {
@@ -187,10 +129,6 @@ class Franchise extends Component {
         this.setState({ value });
     };
 
-    handleChangeIndex = index => {
-        this.setState({ value: index });
-    };
-    
     confirmDeleteOpen = () => {
         this.setState({
             openDel: true
@@ -205,7 +143,7 @@ class Franchise extends Component {
 
     render() {
         const { classes } = this.props;
-        const { value, regency_id, district_id, province_id, postal_id } = this.state;
+        const { value, regency_id, district_id, province_id } = this.state;
         const columns = [
             {
                 name: "Email",
@@ -218,7 +156,7 @@ class Franchise extends Component {
                 options: {
                     filter: true
                 }
-            }, 
+            },
             {
                 name: "No. Telp",
                 options: {
@@ -295,10 +233,10 @@ class Franchise extends Component {
                 <div className={classes.mainComponentWrapper}>
                     <Paper>
                         <MUIDatatable
-                            title={"List Data Franchise"} 
-                            data={this.state.getReady ? data : ""} 
-                            columns={columns} 
-                            options={options} 
+                            title={"List Data Franchise"}
+                            data={this.state.getReady ? data : ""}
+                            columns={columns}
+                            options={options}
                         />
                         <Dialog
                             open={this.state.open}
@@ -323,22 +261,16 @@ class Franchise extends Component {
                                         <Tab value="dataGrobak" label="Data Gerobak" />
                                         <Tab value="dataKoki" label="Data Koki" />
                                     </Tabs>
-                                </AppBar> 
-                                {value === "profilContainer" && 
+                                </AppBar>
+                                {value === "profilContainer" &&
                                     <TabContainer className={classes.tabContainer}>
-                                        <ProfilFranchise 
-                                            fData = {this.state.formData} 
-                                            prov={this.getProvince} 
-                                            onprov={() => this.onChangeProvince(province_id)} 
-                                            onreg={() => this.onChangeRegency(regency_id)} 
-                                            ondist={() => this.onChangeDistrict(district_id)}
-                                        />
+                                        <ProfilFranchise fData = {this.state.formData} />
                                     </TabContainer> }
-                                {value === "dataGrobak" && 
+                                {value === "dataGrobak" &&
                                     <TabContainer className={classes.tabContainer}>
                                         <DataGerobak fData = {this.state.formData} />
                                     </TabContainer> }
-                                {value === "dataKoki" && 
+                                {value === "dataKoki" &&
                                     <TabContainer className={classes.tabContainer}>
                                     <DataKoki fData = {this.state.formData}/>
                                 </TabContainer> }

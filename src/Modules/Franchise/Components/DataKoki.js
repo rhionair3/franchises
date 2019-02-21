@@ -1,89 +1,110 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import MomentUtils from '@date-io/moment';
+import moment from 'moment';
+import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers';
 import Grid from '@material-ui/core/Grid';
-
-const products = [
-  { name: 'Product 1', desc: 'A nice thing', price: '$9.99' },
-  { name: 'Product 2', desc: 'Another thing', price: '$3.45' },
-  { name: 'Product 3', desc: 'Something else', price: '$6.51' },
-  { name: 'Product 4', desc: 'Best thing of all', price: '$14.11' },
-  { name: 'Shipping', desc: '', price: 'Free' },
-];
-const addresses = ['1 Material-UI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
-const payments = [
-  { name: 'Card type', detail: 'Visa' },
-  { name: 'Card holder', detail: 'Mr John Smith' },
-  { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-  { name: 'Expiry date', detail: '04/2024' },
-];
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
-  listItem: {
-    padding: `${theme.spacing.unit}px 0`,
-  },
-  total: {
-    fontWeight: '700',
-  },
-  title: {
-    marginTop: theme.spacing.unit * 2,
-  },
+    root: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120,
+    },
+    selectEmpty: {
+        marginTop: theme.spacing.unit * 2,
+    },
+    paddingPaper: {
+        padding: 5
+    }
 });
 
-function DataKoki(props) {
-  const { classes } = props;
-  return (
-    <React.Fragment>
-      <List disablePadding>
-        {products.map(product => (
-          <ListItem className={classes.listItem} key={product.name}>
-            <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
-          </ListItem>
-        ))}
-        <ListItem className={classes.listItem}>
-          <ListItemText primary="Total" />
-          <Typography variant="subtitle1" className={classes.total}>
-            $34.06
-          </Typography>
-        </ListItem>
-      </List>
-      <Grid container spacing={16}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom className={classes.title}>
-            Shipping
-          </Typography>
-          <Typography gutterBottom>John Smith</Typography>
-          <Typography gutterBottom>{addresses.join(', ')}</Typography>
-        </Grid>
-        <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom className={classes.title}>
-            Payment details
-          </Typography>
-          <Grid container>
-            {payments.map(payment => (
-              <React.Fragment key={payment.name}>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.name}</Typography>
+class FormKoki extends React.Component {
+
+        state = {
+            ftype: '',
+            name: 'hai',
+            selectedDate: new Date(),
+        };
+
+    handleChange = event => {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    };
+    handleDateChange = date => {
+        this.setState({ selectedDate: moment(date, 'YYYY-MM-DD') });
+    };
+
+    render() {
+        const { selectedDate } = this.state;
+        console.log(selectedDate);
+        return (
+            <React.Fragment>
+                <Grid container spacing={24}>
+                    <Grid item xs={12} md={12}>
+                        <Grid container spacing={24}>
+                            <Grid item xs={12} md={12}>
+                                <TextField
+                                    value={this.state.ftype}
+                                    onChange={this.handleChange}
+                                    select
+                                    inputProps={{
+                                    name: 'ftype',
+                                    }}
+                                    margin = "dense"
+                                    variant = "outlined"
+                                    fullWidth
+                                    label = "Disediakan Untuk pemilik"
+                                >
+                                    <MenuItem value="">
+                                    <em>Tidak memilih</em>
+                                    </MenuItem>
+                                    <MenuItem value={20}>Sung Ha Jung</MenuItem>
+                                    <MenuItem value={30}>Anonymous</MenuItem>
+                                    <MenuItem value={40}>David Becham</MenuItem>
+                                    <MenuItem value={50}>Sianturi</MenuItem>
+                                    <MenuItem value={60}>Borneo</MenuItem>
+                                    <MenuItem value={70}>Bajigur</MenuItem>
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12} md={12}>
+                                <TextField required id="price" label="Nama Koki" fullWidth margin="dense" variant="outlined"/>
+                            </Grid>
+                            <Grid item xs={12} md={12}>
+                                <TextField required id="cardNumber" label="No. Identitas Koki ( KTP / SIM / PASPOR )" fullWidth  margin="dense" variant="outlined"/>
+                            </Grid>
+                            <Grid item xs={12} md={12}>
+                                < MuiPickersUtilsProvider utils={MomentUtils} moment={moment} locale='id'>
+                                    <DatePicker
+                                        value={selectedDate}
+                                        format={'YYYY-MM-DD'}
+                                        onChange={this.handleDateChange}
+                                        required
+                                        id="tglPengambilan"
+                                        label="Tanggal Pengambilan"
+                                        fullWidth
+                                        margin = "dense"
+                                        variant = "outlined"
+                                    />
+                                </MuiPickersUtilsProvider>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.detail}</Typography>
-                </Grid>
-              </React.Fragment>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
-    </React.Fragment>
-  );
+            </React.Fragment>
+        );
+    }
 }
 
-DataKoki.propTypes = {
-  classes: PropTypes.object.isRequired,
+FormKoki.propTypes = {
+    classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(DataKoki);
+export default withStyles(styles)(FormKoki);

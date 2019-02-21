@@ -1,5 +1,5 @@
 export const getProvince = () => {
-    return fetch('http://localhost:8081/api/provincy', {
+    return fetch('http://192.168.1.52:8081/api/provincy', {
         method: 'POST',
         body: JSON.stringify({
             orders : 999
@@ -13,7 +13,8 @@ export const getProvince = () => {
 };
 
 export const getRegency = (province_id) => {
-    return fetch('http://localhost:8081/api/regencye', {
+  console.log(province_id);
+    return fetch('http://192.168.1.52:8081/api/regency', {
         method: 'POST',
         body: JSON.stringify({
             province_id : province_id
@@ -26,7 +27,7 @@ export const getRegency = (province_id) => {
     });
 };
 export const getDistrict = (regency_id) => {
-    return fetch('http://localhost:8081/api/district', {
+    return fetch('http://192.168.1.52:8081/api/district', {
         method: 'POST',
         body: JSON.stringify({
             regency_id : regency_id
@@ -40,7 +41,7 @@ export const getDistrict = (regency_id) => {
 };
 
 export const getPostal = (district_id) => {
-    return fetch('http://localhost:8081/api/regencye', {
+    return fetch('http://192.168.1.52:8081/api/postal', {
         method: 'POST',
         body: JSON.stringify({
             district_id : district_id

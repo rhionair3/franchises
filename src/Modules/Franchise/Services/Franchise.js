@@ -1,5 +1,5 @@
 export const getFranchiseList = () => {
-    return fetch('http://localhost:8081/api/franchise', {
+    return fetch('http://192.168.1.52:8081/api/franchise', {
         method: 'GET',
         headers: {
                 "Content-type": "application/json; charset=UTF-8",
@@ -11,7 +11,7 @@ export const getFranchiseList = () => {
 
 export const getFranchiseDetail = (franchiseID) => {
     console.log(franchiseID);
-    return fetch('http://localhost:8081/api/detail-franchise', {
+    return fetch('http://192.168.1.52:8081/api/detail-franchise', {
         method: 'POST',
         body: JSON.stringify({
             id : franchiseID
@@ -26,7 +26,7 @@ export const getFranchiseDetail = (franchiseID) => {
 
 export const getFranchiseDetailDetail = (franchiseID) => {
     console.log(franchiseID);
-    return fetch('http://localhost:8081/api/detail-detailfranchise', {
+    return fetch('http://192.168.1.52:8081/api/detail-detailfranchise', {
         method: 'POST',
         body: JSON.stringify({
             franchise_id : franchiseID
@@ -41,7 +41,7 @@ export const getFranchiseDetailDetail = (franchiseID) => {
 
 export const getFranchiseKokiDetail = (franchiseID) => {
     console.log(franchiseID);
-    return fetch('http://localhost:8081/api/koki-franchise', {
+    return fetch('http://192.168.1.52:8081/api/koki-franchise', {
         method: 'POST',
         body: JSON.stringify({
             franchise_id : franchiseID
@@ -55,7 +55,7 @@ export const getFranchiseKokiDetail = (franchiseID) => {
 }
 
 export const createFranchise = () => {
-    return fetch('http://localhost:8081/api/master/detail-gerobak', {
+    return fetch('http://192.168.1.52:8081/api/master/detail-gerobak', {
         method: 'POST',
         body: JSON.stringify({
         }),
@@ -68,7 +68,7 @@ export const createFranchise = () => {
 }
 
 export const updateFranchise = (datafranchise) => {
-    return fetch('http://localhost:8081/api/master/detail-gerobak', {
+    return fetch('http://192.168.1.52:8081/api/master/detail-gerobak', {
         method: 'POST',
         body: JSON.stringify({
             id : datafranchise
@@ -82,7 +82,7 @@ export const updateFranchise = (datafranchise) => {
 }
 
 export const deleteFranchise = (franchiseId) => {
-    return fetch('http://localhost:8081/api/master/detail-gerobak', {
+    return fetch('http://192.168.1.52:8081/api/master/detail-gerobak', {
         method: 'POST',
         body: JSON.stringify({
             id : franchiseId
@@ -96,7 +96,7 @@ export const deleteFranchise = (franchiseId) => {
 }
 
 export const createFranchiseDetail = () => {
-    return fetch('http://localhost:8081/api/master/detail-gerobak', {
+    return fetch('http://192.168.1.52:8081/api/master/detail-gerobak', {
         method: 'POST',
         body: JSON.stringify({
         }),
@@ -109,7 +109,7 @@ export const createFranchiseDetail = () => {
 }
 
 export const updateFranchiseDetail = (fdetaiID) => {
-    return fetch('http://localhost:8081/api/master/detail-gerobak', {
+    return fetch('http://192.168.1.52:8081/api/master/detail-gerobak', {
         method: 'POST',
         body: JSON.stringify({
         }),
@@ -122,7 +122,7 @@ export const updateFranchiseDetail = (fdetaiID) => {
 }
 
 export const getFranchiseGerobakList = (franchiseID) => {
-    return fetch('http://localhost:8081/api/master/detail-gerobak', {
+    return fetch('http://192.168.1.52:8081/api/master/detail-gerobak', {
         method: 'POST',
         body: JSON.stringify({
         }),
@@ -135,7 +135,7 @@ export const getFranchiseGerobakList = (franchiseID) => {
 }
 
 export const getFranchiseKokiList = (franchiseID) => {
-    return fetch('http://localhost:8081/api/master/detail-gerobak', {
+    return fetch('http://192.168.1.52:8081/api/master/detail-gerobak', {
         method: 'POST',
         body: JSON.stringify({
         }),
