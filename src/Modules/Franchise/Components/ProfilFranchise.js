@@ -25,10 +25,10 @@ const styles = theme => ({
     }
 });
 
-const provList = [];
-const regList = [];
-const distList = [];
-const postList = [];
+let provList = new Array();
+let regList = new Array();
+let distList = new Array();
+let postList = new Array();
 class ProfilFranchise extends React.Component {
     constructor(props) {
         super(props);
@@ -43,9 +43,16 @@ class ProfilFranchise extends React.Component {
             district_id : "",
             postal_id : ""
         };
+        this.updateParentData = this.updateParentData.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     };
 
     componentDidMount() {
+      if(this.props.fData > 0 ) {
+        console.log('ada data')
+      }else {
+        console.log('ga nemu data')
+      }
       let getProvinceList = getProvince();
       getProvinceList.then(resProv => {
           return resProv.json();
@@ -67,19 +74,27 @@ class ProfilFranchise extends React.Component {
       })
     }
 
+    updateParentData() {
+      this.props.onChildChange(this.state);
+    }
+
     handleChange = () => event => {
         const state = this.state;
         state[event.target.name] = event.target.value;
-        this.setState(state);
+        this.setState(state, this.updateParentData);
     // console.log(event.target.name);
     }
 
     onChangeProvince = () => event => {
+      this.setState({
+          postal_id : "12"
+      })
         let getReg = getRegency(event.target.value);
         getReg.then(resReg => {
             return resReg.json();
         }).then(resultReg => {
           let rows = {};
+          regList = [];
           resultReg.regency.map(item => {
             rows = {
                     id : item.id,
@@ -88,7 +103,7 @@ class ProfilFranchise extends React.Component {
             regList.push(rows);
             const state = this.state;
             state[event.target.name] = event.target.value;
-            this.setState(state);
+            this.setState(state, this.updateParentData);
             this.setState({
                 getReady : true
             });
@@ -103,6 +118,7 @@ class ProfilFranchise extends React.Component {
             return resDist.json();
         }).then(resultDist => {
             let rows = {};
+            distList =[];
             resultDist.district.map(item => {
                 rows = {
                         id : item.id,
@@ -111,7 +127,7 @@ class ProfilFranchise extends React.Component {
                 distList.push(rows);
                 const state = this.state;
                 state[event.target.name] = event.target.value;
-                this.setState(state);
+                this.setState(state, this.updateParentData);
                 this.setState({
                     getReady : true
                 });
@@ -126,6 +142,7 @@ class ProfilFranchise extends React.Component {
             return resPost.json();
         }).then(resultPost => {
             let rows = {};
+            postList = [];
             resultPost.postal.map(item => {
                 rows = {
                         id : item.id,
@@ -134,7 +151,7 @@ class ProfilFranchise extends React.Component {
                 postList.push(rows);
                 const state = this.state;
                 state[event.target.name] = event.target.value;
-                this.setState(state);
+                this.setState(state, this.updateParentData);
                 this.setState({
                     getReady : true
                 });
@@ -144,6 +161,7 @@ class ProfilFranchise extends React.Component {
     }
 
     render() {
+      console.log(this.props.fData);
         const { classes } = this.props;
           return (
             <React.Fragment>
@@ -226,8 +244,8 @@ class ProfilFranchise extends React.Component {
                 <Grid item xs={12} sm={6}>
                 <TextField
                     required
-                    id="zip"
-                    name="zip"
+                    id="npwp_no"
+                    name="npwp_no"
                     label="No. NPWP ( Wajib Diisi Bila Perusahaan )"
                     fullWidth
                     margin = "dense"
@@ -364,8 +382,8 @@ class ProfilFranchise extends React.Component {
                 <Grid item xs={12} sm={4}>
                 <TextField
                     required
-                    id="zip"
-                    name="zip"
+                    id="contact_no"
+                    name="contact_no"
                     label="No. Telepon"
                     fullWidth
                     margin = "dense"
@@ -375,8 +393,8 @@ class ProfilFranchise extends React.Component {
                 <Grid item xs={12} sm={4}>
                 <TextField
                     required
-                    id="country"
-                    name="country"
+                    id="mobile"
+                    name="mobile"
                     label="No. Telepon Seluler"
                     fullWidth
                     margin = "dense"
@@ -386,8 +404,8 @@ class ProfilFranchise extends React.Component {
                 <Grid item xs={12} sm={4}>
                 <TextField
                     required
-                    id="country"
-                    name="country"
+                    id="email"
+                    name="email"
                     label="Alamat Email ( Untuk Verifikasi Pembuatan Akun )"
                     fullWidth
                     margin = "dense"

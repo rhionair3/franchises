@@ -140,7 +140,7 @@ class BrambangLayout extends Component {
                                 </ListItem>
                             </div>
                             <div className={classes.listItemWrapper}>
-                                <ListItem className={classes.listItemInner}>
+                                <ListItem className={classes.listItemInner} component="a" href="/master-menu">
                                         <ListItemIcon>
                                             <DashboardIcon />
                                         </ListItemIcon>

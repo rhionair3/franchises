@@ -52,6 +52,9 @@ class Franchise extends Component {
     };
 
     componentDidMount() {
+        this.setState({
+            getReady : false
+        });
         let datafranchise = getFranchiseList();
         datafranchise.then(response => {
             return response.json();
@@ -139,7 +142,12 @@ class Franchise extends Component {
         this.setState({
             openDel: false
         });
-    }
+    };
+
+    onChildChange = (value) => {
+      console.log(value);
+      this.setState(value);
+    };
 
     render() {
         const { classes } = this.props;
@@ -264,15 +272,15 @@ class Franchise extends Component {
                                 </AppBar>
                                 {value === "profilContainer" &&
                                     <TabContainer className={classes.tabContainer}>
-                                        <ProfilFranchise fData = {this.state.formData} />
+                                        <ProfilFranchise fData = {this.state.formData} onChildChange = {(value) => this.onChildChange(value)} />
                                     </TabContainer> }
                                 {value === "dataGrobak" &&
                                     <TabContainer className={classes.tabContainer}>
-                                        <DataGerobak fData = {this.state.formData} />
+                                        <DataGerobak fData = {this.state.formData} onChildChange = {(value) => this.onChildChange(value)} />
                                     </TabContainer> }
                                 {value === "dataKoki" &&
                                     <TabContainer className={classes.tabContainer}>
-                                    <DataKoki fData = {this.state.formData}/>
+                                    <DataKoki fData = {this.state.formData} onChildChange = {(value) => this.onChildChange(value)} />
                                 </TabContainer> }
                             </DialogContent>
                             <DialogActions>

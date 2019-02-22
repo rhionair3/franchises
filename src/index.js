@@ -10,7 +10,8 @@ import Gerobak from './Modules/Gerobak/Screens/Index';
 import MasterGerobak from './Modules/Gerobak/Screens/Master';
 import DataKoki from './Modules/Koki/Screens/Index';
 import DataTraining from './Modules/Training/Screens/Index';
-import Login from "./Modules/Otentikasi/Screens/Index.js";
+import MasterMenu from './Modules/Menu/Screens/Index';
+import Login from "./Modules/Otentikasi/Screens/Index";
 import * as serviceWorker from './serviceWorker';
 
 const GetChildren = props => props.children;
@@ -30,6 +31,7 @@ const BrambangApp = () => (
                 <Route exact path="/koki" component={DataKoki} />
                 <Route exact path="/training" component={DataTraining} />
                 <Route exact path="/master-gerobak" component={MasterGerobak} />
+                <Route exact path="/master-menu" component={MasterMenu} />
             </BrambangLayout>
         </GetChildren>
     </BrowserRouter>
